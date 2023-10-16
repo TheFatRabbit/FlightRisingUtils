@@ -23,10 +23,10 @@ gui.geometry(f"{G.LEFT_BORDER[1][0]-G.LEFT_BORDER[0][0]}x{G.LEFT_BORDER[1][1]-G.
 gui.geometry(f"+{G.LEFT_BORDER[0][0]}+{G.LEFT_BORDER[0][1]}")
 gui.attributes("-topmost", True)
 
-has_uploaded = False
+has_uploaded = None
 
 def on_close():
-    if not has_uploaded:
+    if has_uploaded is not None and not has_uploaded:
         if messagebox.askokcancel("Exit", "You have not yet uploaded data to the sheet."):
             gui.destroy()
     else:
@@ -362,13 +362,6 @@ def search_rewards(loot_image):
         add_loot(match_list[0][0], match_list[0][1])
     elif len(match_list) > 1:
         choose_drops(match_list)
-                ## region = (location[0] + G.LOOT_ITEM_BOUNDS[0], location[1] + G.LOOT_ITEM_BOUNDS[1], location[0] + G.LOOT_ITEM_BOUNDS[0] + 56, location[1] + G.LOOT_ITEM_BOUNDS[1] + 56)
-                #if pyautogui.locateOnScreen(os.path.join(dirname, "images", "2.png"), region=region, confidence = 0.9):
-                #    add_loot(image_filename.replace(".png", ""), folder_path)
-                #if pyautogui.locateOnScreen(os.path.join(dirname, "images", "3.png"), region=region, confidence = 0.9):
-                #    add_loot(image_filename.replace(".png", ""), folder_path)
-                #    add_loot(image_filename.replace(".png", ""), folder_path)
-                # if there are 4 then manually enter until I get a screenshot of a four
 
 
 
@@ -407,5 +400,9 @@ def add_loot(name, type):
     most_recent_loot.insert(0, f"{name}, ")
     raw_paste_box.insert(tkinter.END, f"[item={name}] ")
     loot_boxes[type].insert("end", f"\n{name}")
+
+    global has_uploaded
+    if has_uploaded is None:
+        has_uploaded = False
 
 gui.mainloop()
