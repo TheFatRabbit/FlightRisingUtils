@@ -225,6 +225,7 @@ def lock_venue():
     venue = venue_choice.get()
     venue_selector.destroy()
     venue_confirm.destroy()
+    reconfigure_bounds.destroy()
 
     keyboard.add_hotkey("1", scratch_1)
     keyboard.add_hotkey("2", scratch_2)
@@ -459,5 +460,19 @@ def add_loot(name, type):
     global has_uploaded
     if has_uploaded is None:
         has_uploaded = False
+
+def change_bboxes():
+    config_gui = tkinter.Tk()
+    config_gui.title("Configure Bounds")
+    config_gui.attributes("-topmost", True)
+    config_gui.geometry("250x250")
+    config_gui.geometry("+470+100")
+
+    
+
+    config_gui.mainloop()
+
+reconfigure_bounds = tkinter.Button(gui, text="Configure Bounds", command=change_bboxes)
+reconfigure_bounds.pack()
 
 gui.mainloop()
