@@ -204,6 +204,10 @@ def lock_venue():
     keyboard.add_hotkey("r", elim_4)
     keyboard.add_hotkey("space", press_space)
 
+    keyboard.add_hotkey("/", minor_hp_key)
+    keyboard.add_hotkey("*", medium_hp_key)
+    keyboard.add_hotkey("-", major_hp_key)
+
     most_recent_loot.grid(row=0, column=0, columnspan=3, sticky="nsew")
 
     raw_paste_box.grid(row=1, column=0, columnspan=3, sticky="nsew")
@@ -326,6 +330,7 @@ def elim_4():
     pyautogui.press("a")
     pyautogui.press("r")
     anti_repeat = False
+
 def press_space():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
@@ -348,6 +353,24 @@ def press_space():
     pyautogui.click()
 
     search_rewards(loot_image)
+
+def minor_hp_key():
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    add_minor()
+
+def medium_hp_key():
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    add_medium()
+
+def major_hp_key():
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    add_major()
 
 def search_rewards(loot_image):
     match_list = []
