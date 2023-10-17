@@ -7,9 +7,41 @@ import keyboard
 import tkinter
 from tkinter import StringVar, font, messagebox
 from PIL import Image, ImageGrab, ImageTk
-import globals as G
 
 dirname = os.path.dirname(__file__)
+
+VENUE_NAMES = (
+    "Training Fields",
+    "Woodland Path",
+    "Scorched Forest",
+    "Sandswept Delta",
+    "Silk-Strewn Wreckage",
+    "Blooming Grove",
+    "Forgotten Cave",
+    "Bamboo Falls",
+    "Thunderhead Savanna",
+    "Redrock Cove",
+    "Waterway",
+    "Arena",
+    "Volcanic Vents",
+    "Rainsong Jungle",
+    "Boreal Wood",
+    "Crystal Pools",
+    "Harpy's Roost",
+    "Ghostlight Ruins",
+    "Mire",
+    "Kelp Beds",
+    "Golem Workshop",
+    "Forbidden Portal"
+)
+
+loot_title_bounds = (1250, 450, 1367, 507)
+
+loot_item_bounds = (1105, 511, 1340, 745)
+
+coli_screen_bounds = (700, 400, 1400, 930)
+
+left_screen_bbox = ((0, 100), (466, 1079))
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
@@ -19,8 +51,8 @@ sheet = sheet.sheet1
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")
-gui.geometry(f"{G.LEFT_BORDER[1][0]-G.LEFT_BORDER[0][0]}x{G.LEFT_BORDER[1][1]-G.LEFT_BORDER[0][1]}")
-gui.geometry(f"+{G.LEFT_BORDER[0][0]}+{G.LEFT_BORDER[0][1]}")
+gui.geometry(f"{left_screen_bbox[1][0]-left_screen_bbox[0][0]}x{left_screen_bbox[1][1]-left_screen_bbox[0][1]}")
+gui.geometry(f"+{left_screen_bbox[0][0]}+{left_screen_bbox[0][1]}")
 gui.attributes("-topmost", True)
 
 has_uploaded = None
@@ -35,7 +67,7 @@ def on_close():
 venue_choice = StringVar()
 venue_choice.set("Sandswept Delta")
 
-venue_selector = tkinter.OptionMenu(gui, venue_choice, *G.VENUE_NAMES)
+venue_selector = tkinter.OptionMenu(gui, venue_choice, *VENUE_NAMES)
 venue_selector.pack()
 
 default_font = font.Font(family="Helvetica", size=10)
@@ -335,14 +367,14 @@ def press_space():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
 
-    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.96):
+    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=loot_title_bounds, confidence=0.96):
         return
 
-    loot_image = ImageGrab.grab(bbox=G.LOOT_ITEM_BOUNDS)
+    loot_image = ImageGrab.grab(bbox=loot_item_bounds)
     loot_image.save(os.path.join(dirname, "recent_loot.png"))
     #loot_image = Image.open(os.path.join(dirname, "recent_loot.png"))
 
-    coli_screen_img = ImageGrab.grab(bbox=G.COLI_SCREEN_BOUNDS)
+    coli_screen_img = ImageGrab.grab(bbox=coli_screen_bounds)
     coli_screen_img.save(os.path.join(dirname, "recent_coli_screen.png"))
 
     gui_loot_image = ImageTk.PhotoImage(loot_image)
