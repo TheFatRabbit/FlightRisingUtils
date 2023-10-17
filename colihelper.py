@@ -386,8 +386,6 @@ def search_rewards(loot_image):
     elif len(match_list) > 1:
         choose_drops(match_list)
 
-
-
 def choose_drops(matches):
     tempgui = tkinter.Tk()
     tempgui.title("Drop Selector")
@@ -409,6 +407,8 @@ def choose_drops(matches):
     tempgui.geometry(f"250x{len(drop_btns) * 35 + 85}")
     tempgui.geometry("+470+100")
     tempgui.mainloop()
+
+    keyboard.add_hotkey("esc", lambda: close_tempgui(tempgui))
 
 def close_tempgui(tempgui):
     tempgui.destroy()
