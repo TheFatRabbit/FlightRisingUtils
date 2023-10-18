@@ -468,7 +468,7 @@ def change_bboxes():
     config_gui.geometry("250x250")
     config_gui.geometry("+470+100")
 
-    
+    # change bboxes here
 
     config_gui.mainloop()
 
