@@ -71,7 +71,7 @@ venue_selector = tkinter.OptionMenu(gui, venue_choice, *VENUE_NAMES)
 venue_selector.pack()
 
 default_font = font.Font(family="Helvetica", size=10)
-bold_font = font.Font(family="Helvetica", size=11, weight="bold")
+bold_font = font.Font(family="Helvetica", size=10, weight="bold")
 
 most_recent_loot = tkinter.Entry(gui, font=bold_font)
 raw_paste_box = tkinter.Entry(gui, font=default_font)
@@ -235,12 +235,12 @@ def lock_venue():
     keyboard.add_hotkey("w", elim_2)
     keyboard.add_hotkey("e", elim_3)
     keyboard.add_hotkey("r", elim_4)
-    keyboard.add_hotkey("a", rally_1)
-    keyboard.add_hotkey("s", rally_2)
-    keyboard.add_hotkey("d", rally_3)
+    keyboard.add_hotkey("t", rally_1)
+    keyboard.add_hotkey("y", rally_2)
+    keyboard.add_hotkey("u", rally_3)
     keyboard.add_hotkey("space", press_space)
 
-    keyboard.add_hotkey("f", fest_currency_key)
+    keyboard.add_hotkey("z", fest_currency_key)
 
     keyboard.add_hotkey("/", minor_hp_key)
     keyboard.add_hotkey("*", medium_hp_key)
@@ -447,7 +447,7 @@ def press_space():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
 
-    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=loot_title_bounds, confidence=0.96):
+    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=loot_title_bounds, confidence=0.97):
         return
 
     loot_image = ImageGrab.grab(bbox=loot_item_bounds)
