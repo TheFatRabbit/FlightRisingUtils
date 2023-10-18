@@ -235,7 +235,12 @@ def lock_venue():
     keyboard.add_hotkey("w", elim_2)
     keyboard.add_hotkey("e", elim_3)
     keyboard.add_hotkey("r", elim_4)
+    keyboard.add_hotkey("a", rally_1)
+    keyboard.add_hotkey("s", rally_2)
+    keyboard.add_hotkey("d", rally_3)
     keyboard.add_hotkey("space", press_space)
+
+    keyboard.add_hotkey("f", fest_currency_key)
 
     keyboard.add_hotkey("/", minor_hp_key)
     keyboard.add_hotkey("*", medium_hp_key)
@@ -280,33 +285,62 @@ venue_confirm.pack()
 
 anti_repeat = False
 def scratch_1():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
     
+    anti_repeat = True
     pyautogui.press("a")
     pyautogui.press("e")
     pyautogui.press("q")
+    anti_repeat = False
 def scratch_2():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
     
+    anti_repeat = True
     pyautogui.press("a")
     pyautogui.press("e")
     pyautogui.press("w")
+    anti_repeat = False
 def scratch_3():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
     
+    anti_repeat = True
     pyautogui.press("a")
     pyautogui.press("e")
     pyautogui.press("e")
+    anti_repeat = False
 def scratch_4():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
     
+    anti_repeat = True
     pyautogui.press("a")
     pyautogui.press("e")
     pyautogui.press("r")
+    anti_repeat = False
+
 def elim_1():
     global anti_repeat
 
@@ -364,6 +398,51 @@ def elim_4():
     pyautogui.press("r")
     anti_repeat = False
 
+def rally_1():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    anti_repeat = True
+    pyautogui.press("a")
+    pyautogui.press("s")
+    pyautogui.press("a")
+    anti_repeat = False
+
+def rally_2():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    anti_repeat = True
+    pyautogui.press("a")
+    pyautogui.press("s")
+    pyautogui.press("s")
+    anti_repeat = False
+
+def rally_3():
+    global anti_repeat
+
+    if anti_repeat:
+        return
+
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    anti_repeat = True
+    pyautogui.press("a")
+    pyautogui.press("s")
+    pyautogui.press("d")
+    anti_repeat = False
+
 def press_space():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
@@ -386,6 +465,12 @@ def press_space():
     pyautogui.click()
 
     search_rewards(loot_image)
+
+def fest_currency_key():
+    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+        return
+    
+    add_fest_currency()
 
 def minor_hp_key():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
