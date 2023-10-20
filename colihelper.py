@@ -214,11 +214,18 @@ minor_hp_btn = tkinter.Button(gui, text="Minor HP Potions: 0", command=add_minor
 medium_hp_btn = tkinter.Button(gui, text="Medium HP Potions: 0", command=add_medium, font=default_font)
 major_hp_btn = tkinter.Button(gui, text="Major HP Potions: 0", command=add_major, font=default_font)
 
-def reset_hotkeys():
-    try:
-        keyboard.clear_all_hotkeys()
-    except AttributeError:
-        pass
+gui_loot_image = None
+recent_loot_label = tkinter.Label(gui, image=gui_loot_image)
+
+venue = ""
+def lock_venue():
+    gui.protocol("WM_DELETE_WINDOW", on_close)
+
+    global venue
+    venue = venue_choice.get()
+    venue_selector.destroy()
+    venue_confirm.destroy()
+    reconfigure_bounds.destroy()
 
     keyboard.add_hotkey("1", scratch_1)
     keyboard.add_hotkey("2", scratch_2)
@@ -239,23 +246,6 @@ def reset_hotkeys():
     keyboard.add_hotkey("/", minor_hp_key)
     keyboard.add_hotkey("*", medium_hp_key)
     keyboard.add_hotkey("-", major_hp_key)
-
-reset_hotkey_btn = tkinter.Button(gui, text="Reset Hotkeys", command=reset_hotkeys, font=default_font)
-
-gui_loot_image = None
-recent_loot_label = tkinter.Label(gui, image=gui_loot_image)
-
-venue = ""
-def lock_venue():
-    gui.protocol("WM_DELETE_WINDOW", on_close)
-
-    global venue
-    venue = venue_choice.get()
-    venue_selector.destroy()
-    venue_confirm.destroy()
-    reconfigure_bounds.destroy()
-
-    reset_hotkeys()
 
     most_recent_loot.grid(row=0, column=0, columnspan=3, sticky="nsew")
 
@@ -289,8 +279,6 @@ def lock_venue():
     minor_hp_btn.grid(row=11, column=0)
     medium_hp_btn.grid(row=11, column=1)
     major_hp_btn.grid(row=11, column=2)
-
-    reset_hotkey_btn.grid(row=12, column=0, columnspan=3)
 
 venue_confirm = tkinter.Button(gui, text="Confirm Selection", command=lock_venue)
 venue_confirm.pack()
@@ -537,8 +525,6 @@ def choose_drops(matches):
     tempgui.geometry(f"250x{len(drop_btns) * 35 + 85}")
     tempgui.geometry("+470+100")
     tempgui.mainloop()
-
-    keyboard.add_hotkey("esc", lambda _: close_tempgui(tempgui))
 
 def close_tempgui(tempgui):
     tempgui.destroy()
