@@ -65,7 +65,7 @@ def on_close():
         gui.destroy()
 
 venue_choice = StringVar()
-venue_choice.set("Sandswept Delta")
+venue_choice.set("Woodland Path")
 
 venue_selector = tkinter.OptionMenu(gui, venue_choice, *VENUE_NAMES)
 venue_selector.pack()
