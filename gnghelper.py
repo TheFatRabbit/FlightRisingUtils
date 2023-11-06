@@ -1,3 +1,5 @@
+# keybinds 1, 2, 3 to solve rows 4, 5, 6 formulaically
+
 import keyboard
 import pyautogui
 import time

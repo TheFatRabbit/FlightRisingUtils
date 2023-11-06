@@ -1,1 +1,4 @@
-{"keybind": "g", "screen_bbox": [88, 400, 90, 1000]}
+{
+    "keybind": "g",
+    "screen_bbox": [700, 400, 1400, 1000]
+}

@@ -4,8 +4,9 @@ import json
 import keyboard
 import time
 import sys
+from pynput.mouse import Listener
 
-# DEFAULT CONFIG JSON:
+# DEFAULT CONFIG JSON (for laptop):
 # {"keybind": "g", "screen_bbox": [700, 400, 1400, 1000]}
 
 config = json.load(open("config.json"))
@@ -21,7 +22,7 @@ def set_keybind():
     try:
         keyboard.add_hotkey(hotkey_to_add, None)
         keyboard.remove_hotkey(hotkey_to_add)
-    except:
+    except ValueError:
         hotkey_to_add = None
     
     if hotkey_to_add is not None:
@@ -48,7 +49,7 @@ def reset_keybind():
 
 point_needed = None
 
-def get_click_location(event):
+def get_click_location(x, y):
     global point_needed
     x, y = pyautogui.position()
     print(x, y)
@@ -56,7 +57,7 @@ def get_click_location(event):
         config["screen_bbox"][0] = x
         config["screen_bbox"][2] = y
         top_left_button.config(text="Set Top Left")
-        gui.unbind("<Button-1>")
+        
         update_json()
     elif point_needed == "bottom_right":
         config["screen_bbox"][1] = x
