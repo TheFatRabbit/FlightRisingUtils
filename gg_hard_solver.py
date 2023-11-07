@@ -52,29 +52,15 @@ for i, row in enumerate(board_bounds):
         center_y = top_left_pixel[1] + modified_y_offset
         board_bounds[i][j] = (int(center_x - (pixel_width/2)), int(center_y - (pixel_height/2)), int(center_x + (pixel_width/2)), int(center_y + (pixel_height/2)))
 
-# board_strings = [
-#     [None] * 4,
-#     [None] * 5,
-#     [None] * 6,
-#     [None] * 7,
-#     [None] * 6,
-#     [None] * 5,
-#     [None] * 4
-# ]
-
 board_strings = [
-    ["X"] * 4,
-    ["X"] * 5,
-    ["X"] * 6,
-    ["X"] * 7,
-    ["X"] * 6,
-    ["X"] * 5,
-    ["X"] * 4
+    [None] * 4,
+    [None] * 5,
+    [None] * 6,
+    [None] * 7,
+    [None] * 6,
+    [None] * 5,
+    [None] * 4
 ]
-
-# img = ImageGrab.grab(board_bounds[1][0])
-# img.show()
-# print(Image.open(os.path.join(dirname, "images", "glimmer.png")).size)
 
 for i, row in enumerate(board_bounds):
     for j, pixel in enumerate(board_bounds[i]):
@@ -92,6 +78,13 @@ def print_formatted_board():
             print(f"{cell} ", end="")
         print()
 
+def print_click_list():
+    for i, row in enumerate(click_list):
+        print(" " * abs(i-3), end="")
+        for bool in row:
+            print(f"{str(bool)[:1]} ", end="")
+        print()
+
 click_list = [
     [False] * 4,
     [False] * 5,
@@ -106,68 +99,149 @@ print_formatted_board()
 
 def toggle_string(i, j):
     if i < 0 or j < 0:
-        raise IndexError("list index out of range")
+        raise IndexError("list index out of range (negative index)")
 
     global board_strings
     board_strings[i][j] = "X" if board_strings[i][j] == "O" else "O"
 
 def simulate_click(i, j):
-    print(f"Click: ({i}, {j})")
-
-    global click_list
-    click_list[i][j] = not click_list[i][j]
+    try:
+        global click_list
+        click_list[i][j] = not click_list[i][j]
+    except IndexError:
+        return
     
     toggle_string(i, j)
 
-    try:
-        toggle_string(i, j+1)
-    except IndexError:
-        pass
-    try:
-        toggle_string(i+1, j+1)
-    except IndexError:
-        pass
-    try:
-        toggle_string(i+1, j)
-    except IndexError:
-        pass
-    try:
-        toggle_string(i, j-1)
-    except IndexError:
-        pass
-    try:
-        toggle_string(i-1, j-1)
-    except IndexError:
-        pass
-    try:
-        toggle_string(i-1, j)
-    except IndexError:
-        pass
+    if i < 3:
+        try:
+            toggle_string(i, j+1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i+1, j+1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i+1, j)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i-1, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i-1, j)
+        except IndexError:
+            pass
+    elif i == 3:
+        try:
+            toggle_string(i, j+1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i+1, j)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i+1, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i-1, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i-1, j)
+        except IndexError:
+            pass
+    elif i > 3:
+        try:
+            toggle_string(i, j+1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i+1, j)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i+1, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i, j-1)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i-1, j)
+        except IndexError:
+            pass
+        try:
+            toggle_string(i-1, j+1)
+        except IndexError:
+            pass
 
 def propagate_4():
-    pass
+    propagation_coords = (
+        (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6)
+    )
+    for coords in propagation_coords:
+        simulate_click(coords[0], coords[1])
 
 def propagate_5():
-    pass
+    propagation_coords = (
+        (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (2, 2), (2, 4), (2, 5), (3, 1), (3, 3), (3, 4), (3, 5), (4, 0), (4, 2)
+    )
+    for coords in propagation_coords:
+        simulate_click(coords[0], coords[1])
 
 def propagate_6():
-    pass
+    propagation_coords = (
+        (0, 0), (0, 3), (1, 1), (1, 3), (3, 2), (3, 4), (4, 1), (4, 4), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4)
+    )
+    for coords in propagation_coords:
+        simulate_click(coords[0], coords[1])
 
 for i, row in enumerate(board_strings):
     if i < 3:
         for j, pixel in enumerate(row):
             if pixel == "X":
                 simulate_click(i+1, j+1)
-                print_formatted_board()
-    # check 4
-    # click through r4
-    # check 5
-    # click through r5
-    # check 6
-    # click through r6
+    if i == 3:
+        if row.count("X") % 2 == 1:
+            propagate_4()
+        for j, pixel in enumerate(row):
+            if pixel == "X":
+                simulate_click(i+1, j)
+    elif i == 4:
+        if row.count("X") % 2 == 1:
+            propagate_5()
+        for j, pixel in enumerate(row):
+            if pixel == "X":
+                simulate_click(i+1, j)
+    elif i == 5:
+        if row.count("X") % 2 == 1:
+            propagate_6()
+        for j, pixel in enumerate(row):
+            if pixel == "X":
+                simulate_click(i+1, j)
 
 print("--------------")
-print_formatted_board()
+print_click_list()
+
+
+
+
+
+
 
 # def solve_board():
 #     gui = tkinter.Tk()
