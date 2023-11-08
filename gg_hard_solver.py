@@ -26,8 +26,6 @@ top_left_point_diagonal = (13/35 * screen_width + config["screen_bbox"][0], 61/3
 top_left_point_vertical = (23/70 * screen_width + config["screen_bbox"][0], 29/100 * screen_height + config["screen_bbox"][1])
 top_right_point = (47/70 * screen_width + config["screen_bbox"][0], 7/30 * screen_height + config["screen_bbox"][1])
 
-# print(f"{top_left_point}\n{top_left_point_diagonal}\n{top_left_point_vertical}\n{top_right}")
-
 pixel_width = (top_right_point[0] - top_left_point[0]) / 4
 pixel_height = (top_left_point_vertical[1] - top_left_point[1]) + 2 * (top_left_point[1] - top_left_point_diagonal[1])
 x_offset = top_left_point[0] - top_left_point_diagonal[0]
@@ -246,7 +244,7 @@ def solve_board():
     print_click_list()
     
     board_image = ImageGrab.grab(bbox=board_bbox)
-    board_image = board_image.resize((int(board_image.size[0]/2), int(board_image.size[1]/2)))
+    board_image = board_image.resize((int(board_image.size[0]/1.5), int(board_image.size[1]/1.5)))
     board_image = ImageTk.PhotoImage(board_image)
     image_label.config(image=board_image)
     image_label.image = board_image
@@ -254,7 +252,7 @@ def solve_board():
     # use cv2 to edit the image (with local coords; can modify the pixel detection to find) to show clicks needed
 
 gui = tkinter.Tk()
-gui.geometry("300x300")
+gui.geometry(f"{int((board_bbox[2]-board_bbox[0])/1.5) + 20}x{int((board_bbox[3]-board_bbox[1])/1.5) + 40}")
 gui.title("G&G Hard Solver by TheFatRabbit")
 gui.attributes("-topmost", True)
 
