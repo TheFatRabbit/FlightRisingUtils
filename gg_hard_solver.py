@@ -2,7 +2,7 @@ import json
 import pyautogui
 import pygetwindow
 import tkinter
-from PIL import Image, ImageDraw, ImageGrab
+from PIL import Image, ImageDraw, ImageGrab, ImageTk
 import keyboard
 import os
 
@@ -53,24 +53,10 @@ for i, row in enumerate(board_bounds):
         center_y = top_left_pixel[1] + modified_y_offset
         board_bounds[i][j] = (int(center_x - (pixel_width/2)), int(center_y - (pixel_height/2)), int(center_x + (pixel_width/2)), int(center_y + (pixel_height/2)))
 
-board_strings = [
-    [None] * 4,
-    [None] * 5,
-    [None] * 6,
-    [None] * 7,
-    [None] * 6,
-    [None] * 5,
-    [None] * 4
-]
+board_bbox = (board_bounds[3][0][0], board_bounds[0][0][1], board_bounds[3][6][2], board_bounds[6][0][3])
 
-for i, row in enumerate(board_bounds):
-    for j, pixel in enumerate(board_bounds[i]):
-        if pyautogui.locate(os.path.join(dirname, "glimmer.png"), ImageGrab.grab(board_bounds[i][j]), confidence=0.9):
-            board_strings[i][j] = "X"
-        elif pyautogui.locate(os.path.join(dirname, "gloom.png"), ImageGrab.grab(board_bounds[i][j]), confidence=0.9):
-            board_strings[i][j] = "O"
-        else:
-            print(f"Failed to find pixel ({i}, {i})")
+board_strings = None
+click_list = None
 
 def print_formatted_board():
     for i, row in enumerate(board_strings):
@@ -85,18 +71,6 @@ def print_click_list():
         for bool in row:
             print(f"{str(bool)[:1]} ", end="")
         print()
-
-click_list = [
-    [False] * 4,
-    [False] * 5,
-    [False] * 6,
-    [False] * 7,
-    [False] * 6,
-    [False] * 5,
-    [False] * 4
-]
-
-print_formatted_board()
 
 def toggle_string(i, j):
     if i < 0 or j < 0:
@@ -211,80 +185,83 @@ def propagate_6():
     for coords in propagation_coords:
         simulate_click(coords[0], coords[1])
 
-for i, row in enumerate(board_strings):
-    if i < 3:
-        for j, pixel in enumerate(row):
-            if pixel == "X":
-                simulate_click(i+1, j+1)
-    if i == 3:
-        if row.count("X") % 2 == 1:
-            propagate_4()
-        for j, pixel in enumerate(row):
-            if pixel == "X":
-                simulate_click(i+1, j)
-    elif i == 4:
-        if row.count("X") % 2 == 1:
-            propagate_5()
-        for j, pixel in enumerate(row):
-            if pixel == "X":
-                simulate_click(i+1, j)
-    elif i == 5:
-        if row.count("X") % 2 == 1:
-            propagate_6()
-        for j, pixel in enumerate(row):
-            if pixel == "X":
-                simulate_click(i+1, j)
+def solve_board():
+    global board_strings, click_list
+    board_strings = [
+        [None] * 4,
+        [None] * 5,
+        [None] * 6,
+        [None] * 7,
+        [None] * 6,
+        [None] * 5,
+        [None] * 4
+    ]
 
-print("--------------")
-print_click_list()
+    click_list = [
+        [False] * 4,
+        [False] * 5,
+        [False] * 6,
+        [False] * 7,
+        [False] * 6,
+        [False] * 5,
+        [False] * 4
+    ]
 
+    for i, row in enumerate(board_bounds):
+        for j, pixel in enumerate(board_bounds[i]):
+            if pyautogui.locate(os.path.join(dirname, "glimmer.png"), ImageGrab.grab(board_bounds[i][j]), confidence=0.9):
+                board_strings[i][j] = "X"
+            elif pyautogui.locate(os.path.join(dirname, "gloom.png"), ImageGrab.grab(board_bounds[i][j]), confidence=0.9):
+                board_strings[i][j] = "O"
+            else:
+                print(f"Failed to find pixel ({i}, {i})")
 
+    print_formatted_board()
 
+    for i, row in enumerate(board_strings):
+        if i < 3:
+            for j, pixel in enumerate(row):
+                if pixel == "X":
+                    simulate_click(i+1, j+1)
+        if i == 3:
+            if row.count("X") % 2 == 1:
+                propagate_4()
+            for j, pixel in enumerate(row):
+                if pixel == "X":
+                    simulate_click(i+1, j)
+        elif i == 4:
+            if row.count("X") % 2 == 1:
+                propagate_5()
+            for j, pixel in enumerate(row):
+                if pixel == "X":
+                    simulate_click(i+1, j)
+        elif i == 5:
+            if row.count("X") % 2 == 1:
+                propagate_6()
+            for j, pixel in enumerate(row):
+                if pixel == "X":
+                    simulate_click(i+1, j)
 
+    print("--------------")
+    print_click_list()
+    
+    board_image = ImageGrab.grab(bbox=board_bbox)
+    board_image = board_image.resize((int(board_image.size[0]/2), int(board_image.size[1]/2)))
+    board_image = ImageTk.PhotoImage(board_image)
+    image_label.config(image=board_image)
+    image_label.image = board_image
 
+    # use cv2 to edit the image (with local coords; can modify the pixel detection to find) to show clicks needed
 
+gui = tkinter.Tk()
+gui.geometry("300x300")
+gui.title("G&G Hard Solver by TheFatRabbit")
+gui.attributes("-topmost", True)
 
-# def solve_board():
-#     gui = tkinter.Tk()
-#     gui.geometry # set geo based on notebook calcs
-#     gui.attributes("-topmost", True)
-#     gui.title("G&G Hard Solver by TheFatRabbit")
+image_label = tkinter.Label(gui, image=None)
+image_label.pack()
 
-#     board_image = ImageGrab.grab(bbox=config["screen_bbox"])
-#     board_image.show()
+solve_button = tkinter.Button(gui, text="Solve Board", command=solve_board)
+solve_button.pack()
 
-# keyboard.add_hotkey(config["keybind"], solve_board)
-
-# keyboard.wait()
-
-
-
-# OVERLAY
-#screen_width, screen_height = pyautogui.size()
-
-#window = pygetwindow.getWindowsWithTitle("Fairgrounds | Glimmer & Gloom Flight Rising - Brave")
-
-#if not window:
-#    window = pygetwindow.getActiveWindow()
-#else:
-#    window = window[0]
-
-#window.resizeTo(screen_width, screen_height)
-
-#window.moveTo(0, 0)
-
-#color = "white"
-#pyautogui.moveTo(board[0][0][0], board[0][0][1])
-#pyautogui.dragTo(board[0][0][2], board[0][0][3], duration=.5, button="left")
-
-#overlay = Image.new('RGBA', (screen_width, screen_height), (0, 0, 0, 0))
-
-#draw = ImageDraw.Draw(overlay)
-
-#box_color = (255, 255, 255, 255)
-#box_position = board[0][0]
-#draw.rectangle(box_position, outline=box_color)
-
-#overlay.show()
-
-#print(board_locations)
+gui.mainloop()
