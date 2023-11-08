@@ -11,7 +11,8 @@ dirname = os.path.dirname(__file__)
 config = json.load(open("config.json"))
 
 # delete this once confirm this works
-# whole screen = (700, 400), (1400, 1000) = 700x600
+# whole screen = (700, 400), (1400, 1000) (LAPTOP)
+# whole screen = (701, 377), (1404, 980) (PC)
 # a location = (930, 540) LOCAL (230, 140)
 # a diagonal location = (960, 522) LOCAL (260, 122)
 # a vertical location = (930, 574) LOCAL (230, 174)
