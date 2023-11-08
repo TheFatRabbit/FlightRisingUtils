@@ -236,8 +236,7 @@ def lock_venue():
     keyboard.add_hotkey("e", elim_3)
     keyboard.add_hotkey("r", elim_4)
     keyboard.add_hotkey("t", rally_1)
-    keyboard.add_hotkey("y", rally_2)
-    keyboard.add_hotkey("u", rally_3)
+    keyboard.add_hotkey("y", haste_1)
 
     keyboard.add_hotkey("space", space_key)
 
@@ -413,7 +412,7 @@ def rally_1():
     pyautogui.press("a")
     anti_repeat = False
 
-def rally_2():
+def haste_1():
     global anti_repeat
 
     if anti_repeat:
@@ -424,23 +423,8 @@ def rally_2():
     
     anti_repeat = True
     pyautogui.press("a")
-    pyautogui.press("s")
-    pyautogui.press("s")
-    anti_repeat = False
-
-def rally_3():
-    global anti_repeat
-
-    if anti_repeat:
-        return
-
-    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
-        return
-    
-    anti_repeat = True
-    pyautogui.press("a")
-    pyautogui.press("s")
     pyautogui.press("d")
+    pyautogui.press("a")
     anti_repeat = False
 
 def space_key():
