@@ -4,6 +4,7 @@ import tkinter
 from PIL import Image, ImageDraw, ImageGrab, ImageTk
 import cv2
 import numpy
+import keyboard
 import os
 
 dirname = os.path.dirname(__file__)
@@ -273,5 +274,7 @@ image_label.pack()
 
 solve_button = tkinter.Button(gui, text="Solve Board", command=solve_board)
 solve_button.pack()
+
+keyboard.add_hotkey(config["hotkey"], solve_board)
 
 gui.mainloop()
