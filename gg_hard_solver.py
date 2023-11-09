@@ -1,22 +1,14 @@
 import json
 import pyautogui
-import pygetwindow
 import tkinter
 from PIL import Image, ImageDraw, ImageGrab, ImageTk
-import keyboard
+import cv2
+import numpy
 import os
 
 dirname = os.path.dirname(__file__)
 
 config = json.load(open("config.json"))
-
-# delete this once confirm this works
-# whole screen = (700, 400), (1400, 1000) (LAPTOP)
-# whole screen = (701, 377), (1404, 980) (PC)
-# a location = (930, 540) LOCAL (230, 140)
-# a diagonal location = (960, 522) LOCAL (260, 122)
-# a vertical location = (930, 574) LOCAL (230, 174)
-# b location = (1170, 540) LOCAL (470, 140)
 
 screen_width = config["screen_bbox"][2] - config["screen_bbox"][0]
 screen_height = config["screen_bbox"][3] - config["screen_bbox"][1]
@@ -49,7 +41,7 @@ for i, row in enumerate(board_bounds):
         modified_y_offset = i*y_offset + i*(pixel_height/2)
         center_x = top_left_pixel[0] + modified_x_offset
         center_y = top_left_pixel[1] + modified_y_offset
-        board_bounds[i][j] = (int(center_x - (pixel_width/2)), int(center_y - (pixel_height/2)), int(center_x + (pixel_width/2)), int(center_y + (pixel_height/2)))
+        board_bounds[i][j] = (int(center_x - pixel_width/2), int(center_y - pixel_height/2), int(center_x + pixel_width/2), int(center_y + pixel_height/2))
 
 board_bbox = (board_bounds[3][0][0], board_bounds[0][0][1], board_bounds[3][6][2], board_bounds[6][0][3])
 
@@ -195,6 +187,16 @@ def solve_board():
         [None] * 4
     ]
 
+    # board_strings = [
+    #     ["X"] * 4,
+    #     ["X"] * 5,
+    #     ["X"] * 6,
+    #     ["O"] * 7,
+    #     ["X"] * 6,
+    #     ["O"] * 5,
+    #     ["X"] * 4
+    # ]
+
     click_list = [
         [False] * 4,
         [False] * 5,
@@ -244,12 +246,22 @@ def solve_board():
     print_click_list()
     
     board_image = ImageGrab.grab(bbox=board_bbox)
+
+    board_image = cv2.cvtColor(numpy.array(board_image), cv2.COLOR_RGB2BGR)
+
+    for i, row in enumerate(click_list):
+        for j, pixel in enumerate(row):
+            if pixel:
+                point1 = (board_bounds[i][j][0] - board_bbox[0] + int(pixel_width/3.6), board_bounds[i][j][1] - board_bbox[1] + int(y_offset))
+                point2 = (board_bounds[i][j][2] - board_bbox[0] - int(pixel_width/3.6), board_bounds[i][j][3] - board_bbox[1] - int(y_offset))
+                board_image = cv2.rectangle(board_image, point1, point2, (0, 0, 255), 4)
+
+    board_image = Image.fromarray(cv2.cvtColor(board_image, cv2.COLOR_BGR2RGB))
+
     board_image = board_image.resize((int(board_image.size[0]/1.5), int(board_image.size[1]/1.5)))
     board_image = ImageTk.PhotoImage(board_image)
     image_label.config(image=board_image)
     image_label.image = board_image
-
-    # use cv2 to edit the image (with local coords; can modify the pixel detection to find) to show clicks needed
 
 gui = tkinter.Tk()
 gui.geometry(f"{int((board_bbox[2]-board_bbox[0])/1.5) + 20}x{int((board_bbox[3]-board_bbox[1])/1.5) + 40}")
