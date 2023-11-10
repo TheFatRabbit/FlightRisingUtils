@@ -260,12 +260,12 @@ def lock_venue():
     loot_boxes["Miscellaneous"].grid(row=3, column=1)
     loot_boxes["NonBoss Familiars"].grid(row=3, column=2)
 
-    loot_boxes["Apparel"].insert("1.0", "Apparel:")
-    loot_boxes["Battle Stones"].insert("1.0", "Battle Stones:")
-    loot_boxes["Boss Familiars"].insert("1.0", "Boss Familiars:")
-    loot_boxes["Genes"].insert("1.0", "Genes:")
-    loot_boxes["Miscellaneous"].insert("1.0", "Miscellaneous:")
-    loot_boxes["NonBoss Familiars"].insert("1.0", "NonBoss Familiars:")
+    loot_boxes["Apparel"].insert("1.0", "Apparel: 0")
+    loot_boxes["Battle Stones"].insert("1.0", "Battle Stones: 0")
+    loot_boxes["Boss Familiars"].insert("1.0", "Boss Familiars: 0")
+    loot_boxes["Genes"].insert("1.0", "Genes: 0")
+    loot_boxes["Miscellaneous"].insert("1.0", "Miscellaneous: 0")
+    loot_boxes["NonBoss Familiars"].insert("1.0", "NonBoss Familiars: 0")
 
     common_chest_btn.grid(row=5, column=0)
 
@@ -525,6 +525,14 @@ def add_loot(name, type):
     most_recent_loot.insert(0, f"{name}, ")
     raw_paste_box.insert(tkinter.END, f"[item={name}] ")
     loot_boxes[type].insert("end", f"\n{name}")
+    
+    line_index = loot_boxes[type].search("\n", "1.0", stopindex="end")
+    first_line = loot_boxes[type].get("1.0", line_index)
+    num_loot = int(first_line[first_line.index(": ")+2:])
+    num_loot += 1
+    first_line = first_line[:first_line.index(": ")+2] + str(num_loot)
+    loot_boxes[type].delete("1.0", f"1.{len(first_line)}")
+    loot_boxes[type].insert("1.0", first_line)
 
     global has_uploaded
     if has_uploaded is None:
