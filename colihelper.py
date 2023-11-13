@@ -35,7 +35,7 @@ VENUE_NAMES = (
     "Forbidden Portal"
 )
 
-DEFAULT_VENUE = "Sandswept Delta"
+DEFAULT_VENUE = "Silk-Strewn Wreckage"
 
 LOOT_TITLE_BOUNDS = (1250, 450, 1367, 507)
 
