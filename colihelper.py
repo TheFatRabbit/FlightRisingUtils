@@ -48,7 +48,7 @@ LEFT_SCREEN_BBOX = ((0, 100), (466, 1079))
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 gc = gspread.authorize(credentials)
-sheet = gc.open("Flight Rising Tracker")
+sheet = gc.open("Flight Rising Utilities")
 sheet = sheet.sheet1
 
 gui = tkinter.Tk()
