@@ -61,7 +61,7 @@ has_uploaded = None
 
 def on_close():
     if has_uploaded is not None and not has_uploaded:
-        if messagebox.askokcancel("Exit", "You have not yet uploaded data to the sheet."):
+        if messagebox.askokcancel("Exit", "Confirm exit? You have not yet uploaded data to the sheet."):
             gui.destroy()
     else:
         gui.destroy()
