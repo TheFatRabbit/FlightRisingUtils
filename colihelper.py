@@ -45,6 +45,42 @@ COLI_SCREEN_BOUNDS = (700, 400, 1400, 930)
 
 LEFT_SCREEN_BBOX = ((0, 100), (466, 1079))
 
+GENERIC_CHESTS = (
+    "Brightshine Jubilee Chest",
+    "Crystalline Gala Chest", 
+    "Greenskeeper Gathering Chest",
+    "Flameforger's Festival Chest",
+    "Mistral Jamboree Chest",
+    "Riot of Rot Chest",
+    "Rockbreaker's Ceremony Chest",
+    "Starfall Celebration Chest",
+    "Thundercrack Carnivale Chest",
+    "Trickmurk Circus Chest",
+    "Wavecrest Saturnalia Chest",
+    "Arena Crate",
+    "Bamboo Falls Crate",
+    "Blooming Grove Crate",
+    "Boreal Wood Crate",
+    "Crystal Pools Crate",
+    "Forbidden Portal Crate",
+    "Forgotten Cave Crate",
+    "Ghostlight Ruins Crate",
+    "Golem Workshop Crate",
+    "Harpy's Roost Crate",
+    "Kelp Beds Crate",
+    "Mire Crate",
+    "Rainsong Jungle Crate",
+    "Redrock Cove Crate",
+    "Sandswept Delta Crate",
+    "Scorched Forest Crate",
+    "Silk-Strewn Wreckage Crate",
+    "Thunderhead Savanna Crate",
+    "Training Fields Crate",
+    "Volcanic Vents Crate",
+    "Waterway Crate",
+    "Woodland Path Crate"
+)
+
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 gc = gspread.authorize(credentials)
@@ -216,6 +252,29 @@ minor_hp_btn = tkinter.Button(gui, text="Minor HP Potions: 0", command=add_minor
 medium_hp_btn = tkinter.Button(gui, text="Medium HP Potions: 0", command=add_medium, font=default_font)
 major_hp_btn = tkinter.Button(gui, text="Major HP Potions: 0", command=add_major, font=default_font)
 
+def rename_most_recent_chest():
+    if most_recent_chest == "N/A":
+        return
+    
+    rename_recent_chest_btn.grid_forget()
+    rename_recent_chest_btn.grid(row=12, column=0)
+    rename_recent_chest_entry.grid(row=12, column=1)
+    rename_recent_chest_submit.grid(row=12, column=2)
+
+def rename_most_recent_chest_submit():
+    rename_recent_chest_btn.grid_forget()
+    rename_recent_chest_entry.grid_forget()
+    rename_recent_chest_submit.grid_forget()
+    rename_recent_chest_btn.grid(row=12, column=1)
+
+    new_chest_name = rename_recent_chest_entry.get()
+    print(new_chest_name) # modify fields within the three data locations
+
+most_recent_chest = "N/A"
+rename_recent_chest_btn = tkinter.Button(gui, text=f"Rename {most_recent_chest}", command=rename_most_recent_chest, font=default_font)
+rename_recent_chest_entry = tkinter.Entry(gui, font=default_font)
+rename_recent_chest_submit = tkinter.Button(gui, text="Submit", command=rename_most_recent_chest_submit, font=default_font)
+
 gui_loot_image = None
 recent_loot_label = tkinter.Label(gui, image=gui_loot_image)
 
@@ -280,6 +339,8 @@ def lock_venue():
     minor_hp_btn.grid(row=11, column=0)
     medium_hp_btn.grid(row=11, column=1)
     major_hp_btn.grid(row=11, column=2)
+
+    rename_recent_chest_btn.grid(row=12, column=0, columnspan=3)
 
 venue_confirm = tkinter.Button(gui, text="Confirm Selection", command=lock_venue)
 venue_confirm.pack()
@@ -457,19 +518,16 @@ def fest_currency_key():
         return
     
     add_fest_currency()
-
 def minor_hp_key():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
     
     add_minor()
-
 def medium_hp_key():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
     
     add_medium()
-
 def major_hp_key():
     if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
         return
@@ -537,6 +595,11 @@ def add_loot(name, type):
     global has_uploaded
     if has_uploaded is None:
         has_uploaded = False
+    
+    if name in GENERIC_CHESTS:
+        global most_recent_chest
+        most_recent_chest = name
+        rename_recent_chest_btn.config(text=f"Rename {most_recent_chest}")
 
 def change_bboxes():
     config_gui = tkinter.Tk()
