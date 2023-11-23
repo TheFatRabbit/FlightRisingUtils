@@ -111,7 +111,7 @@ venue_selector.pack()
 default_font = font.Font(family="Helvetica", size=10)
 bold_font = font.Font(family="Helvetica", size=10, weight="bold")
 
-most_recent_loot = tkinter.Entry(gui, font=bold_font)
+most_recent_loot_entry = tkinter.Entry(gui, font=bold_font)
 raw_paste_box = tkinter.Entry(gui, font=default_font)
 
 loot_boxes = {
@@ -262,16 +262,37 @@ def rename_most_recent_chest():
     rename_recent_chest_submit.grid(row=12, column=2)
 
 def rename_most_recent_chest_submit():
+    global most_recent_chest
+
     rename_recent_chest_btn.grid_forget()
     rename_recent_chest_entry.grid_forget()
     rename_recent_chest_submit.grid_forget()
     rename_recent_chest_btn.grid(row=12, column=1)
 
     new_chest_name = rename_recent_chest_entry.get()
-    print(new_chest_name) # modify fields within the three data locations
+
+    most_recent_loot = most_recent_loot_entry.get()
+    most_recent_loot = f"{new_chest_name}{most_recent_loot[most_recent_loot.index(','):]}"
+    most_recent_loot_entry.delete(0, tkinter.END)
+    most_recent_loot_entry.insert(0, most_recent_loot)
+
+    raw_paste = raw_paste_box.get()
+    raw_paste = f"{raw_paste[:raw_paste.rindex(most_recent_chest)]}{new_chest_name}] "
+    raw_paste_box.delete(0, tkinter.END)
+    raw_paste_box.insert(0, raw_paste)
+
+    loot_box = loot_boxes["Miscellaneous"].get("1.0", tkinter.END)
+    loot_box = f"{loot_box[:loot_box.rindex(most_recent_chest)]}{new_chest_name}{loot_box[loot_box.rindex(most_recent_chest)+len(most_recent_chest):]}"
+    print(loot_box)
+    loot_box = loot_box[:-1]
+    print(loot_box)
+    loot_boxes["Miscellaneous"].delete("1.0", tkinter.END)
+    loot_boxes["Miscellaneous"].insert("1.0", loot_box)
+
+    most_recent_chest = "N/A"
 
 most_recent_chest = "N/A"
-rename_recent_chest_btn = tkinter.Button(gui, text=f"Rename {most_recent_chest}", command=rename_most_recent_chest, font=default_font)
+rename_recent_chest_btn = tkinter.Button(gui, text=f"Rename last chest", command=rename_most_recent_chest, font=default_font)
 rename_recent_chest_entry = tkinter.Entry(gui, font=default_font)
 rename_recent_chest_submit = tkinter.Button(gui, text="Submit", command=rename_most_recent_chest_submit, font=default_font)
 
@@ -307,7 +328,7 @@ def lock_venue():
     keyboard.add_hotkey("*", medium_hp_key)
     keyboard.add_hotkey("-", major_hp_key)
 
-    most_recent_loot.grid(row=0, column=0, columnspan=3, sticky="nsew")
+    most_recent_loot_entry.grid(row=0, column=0, columnspan=3, sticky="nsew")
 
     raw_paste_box.grid(row=1, column=0, columnspan=3, sticky="nsew")
     raw_paste_box.insert(0, "Raw: ")
@@ -580,7 +601,7 @@ def add_loot(name, type):
         add_one_common_chest()
         return
 
-    most_recent_loot.insert(0, f"{name}, ")
+    most_recent_loot_entry.insert(0, f"{name}, ")
     raw_paste_box.insert(tkinter.END, f"[item={name}] ")
     loot_boxes[type].insert("end", f"\n{name}")
     
@@ -599,7 +620,7 @@ def add_loot(name, type):
     if name in GENERIC_CHESTS:
         global most_recent_chest
         most_recent_chest = name
-        rename_recent_chest_btn.config(text=f"Rename {most_recent_chest}")
+        rename_recent_chest_btn.config(text=f"Rename last chest")
 
 def change_bboxes():
     config_gui = tkinter.Tk()
