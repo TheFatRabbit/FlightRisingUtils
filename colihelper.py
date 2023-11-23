@@ -283,9 +283,7 @@ def rename_most_recent_chest_submit():
 
     loot_box = loot_boxes["Miscellaneous"].get("1.0", tkinter.END)
     loot_box = f"{loot_box[:loot_box.rindex(most_recent_chest)]}{new_chest_name}{loot_box[loot_box.rindex(most_recent_chest)+len(most_recent_chest):]}"
-    print(loot_box)
     loot_box = loot_box[:-1]
-    print(loot_box)
     loot_boxes["Miscellaneous"].delete("1.0", tkinter.END)
     loot_boxes["Miscellaneous"].insert("1.0", loot_box)
 
