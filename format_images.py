@@ -23,6 +23,7 @@ for folder_path in os.listdir(os.path.join(dirname, "images")):
     for subfolder_path in os.listdir(os.path.join(dirname, "images", folder_path)):
         for file_path in os.listdir(os.path.join(dirname, "images", folder_path, subfolder_path)):
             if ".ini" in file_path:
+                os.remove(os.path.join(dirname, "images", folder_path, subfolder_path, file_path))
                 continue
             image = Image.open(os.path.join(dirname, "images", folder_path, subfolder_path, file_path))
             if image.mode == "RGBA":
