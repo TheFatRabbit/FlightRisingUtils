@@ -35,7 +35,7 @@ VENUE_NAMES = (
     "Forbidden Portal"
 )
 
-DEFAULT_VENUE = "Silk-Strewn Wreckage"
+DEFAULT_VENUE = "Redrock Cove"
 
 LOOT_TITLE_BOUNDS = (1250, 450, 1367, 507)
 
@@ -222,6 +222,8 @@ def manual_data():
 
 manual_add_button = tkinter.Button(gui, text="Manually input data", command=manual_data, font=default_font)
 
+total_battles_label = tkinter.Label(gui, text="Battles: 0", font=default_font)
+
 def add_fest_currency():
     currency_str = currency_btn.cget("text")
     currency_num = currency_str[currency_str.index(": ")+2:]
@@ -353,7 +355,9 @@ def lock_venue():
 
     recent_loot_label.grid(row=4, column=0, columnspan=3)
 
-    currency_btn.grid(row=10, column=0, columnspan=3)
+    total_battles_label.grid(row=10, column=0)
+
+    currency_btn.grid(row=10, column=2)
 
     minor_hp_btn.grid(row=11, column=0)
     medium_hp_btn.grid(row=11, column=1)
@@ -516,9 +520,12 @@ def space_key():
     if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=LOOT_TITLE_BOUNDS, confidence=0.97):
         return
 
+    battles_str = total_battles_label.cget("text")
+    battles_num = int(battles_str[battles_str.index(": ")+2:]) + 1
+    total_battles_label.config(text=f"Battles: {battles_num}")
+
     loot_image = ImageGrab.grab(bbox=LOOT_ITEM_BOUNDS)
     loot_image.save(os.path.join(dirname, "recent_loot.png"))
-    #loot_image = Image.open(os.path.join(dirname, "recent_loot.png"))
 
     coli_screen_img = ImageGrab.grab(bbox=COLI_SCREEN_BOUNDS)
     coli_screen_img.save(os.path.join(dirname, "recent_coli_screen.png"))
