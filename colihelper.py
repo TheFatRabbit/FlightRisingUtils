@@ -5,11 +5,9 @@ import pyautogui
 import pygetwindow
 import keyboard
 import tkinter
-from tkinter import StringVar, font, messagebox
+from tkinter import font, messagebox, StringVar
 from PIL import ImageGrab, ImageTk
 import globals as G
-
-## Setup of config for later use
 
 dirname = os.path.dirname(__file__)
 
@@ -24,15 +22,13 @@ gui.title("FR Coli Helper")
 gui.geometry(f"{G.LEFT_SCREEN_BBOX[1][0]-G.LEFT_SCREEN_BBOX[0][0]}x{G.LEFT_SCREEN_BBOX[1][1]-G.LEFT_SCREEN_BBOX[0][1]}")
 gui.geometry(f"+{G.LEFT_SCREEN_BBOX[0][0]}+{G.LEFT_SCREEN_BBOX[0][1]}")
 gui.attributes("-topmost", True)
-gui.option_add("*font", "helvetica 10")
-
-## Tkinter functions
+gui.option_add("*font", G.FONT)
 
 has_uploaded = None
 
 venue = ""
-def lock_venue():
-    gui.protocol("WM_DELETE_WINDOW", on_close)
+def lock_in_venue():
+    gui.protocol("WM_DELETE_WINDOW", close_action)
 
     global venue
     venue = venue_choice.get()
@@ -95,7 +91,7 @@ def lock_venue():
 
     rename_recent_chest_btn.grid(row=12, column=0, columnspan=3)
 
-def on_close():
+def close_action():
     if has_uploaded is not None and not has_uploaded:
         if messagebox.askokcancel("Exit", "Confirm exit? You have not yet uploaded data to the sheet."):
             gui.destroy()
@@ -380,7 +376,7 @@ rename_recent_chest_submit = tkinter.Button(gui, text="Submit", command=submit_r
 gui_loot_image = None
 recent_loot_label = tkinter.Label(gui, image=gui_loot_image)
 
-venue_confirm = tkinter.Button(gui, text="Confirm Selection", command=lock_venue)
+venue_confirm = tkinter.Button(gui, text="Confirm Selection", command=lock_in_venue)
 venue_confirm.pack()
 
 gui.mainloop()

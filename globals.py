@@ -1,3 +1,15 @@
+DEFAULT_VENUE = "Redrock Cove"
+
+FONT = "Helvetica 10"
+
+LOOT_TITLE_BOUNDS = (1250, 450, 1367, 507)
+
+LOOT_ITEM_BOUNDS = (1105, 511, 1340, 745)
+
+COLI_SCREEN_BOUNDS = (700, 400, 1400, 930)
+
+LEFT_SCREEN_BBOX = ((0, 100), (466, 1079))
+
 VENUE_NAMES = (
     "Training Fields",
     "Woodland Path",
@@ -22,16 +34,6 @@ VENUE_NAMES = (
     "Golem Workshop",
     "Forbidden Portal"
 )
-
-DEFAULT_VENUE = "Redrock Cove"
-
-LOOT_TITLE_BOUNDS = (1250, 450, 1367, 507)
-
-LOOT_ITEM_BOUNDS = (1105, 511, 1340, 745)
-
-COLI_SCREEN_BOUNDS = (700, 400, 1400, 930)
-
-LEFT_SCREEN_BBOX = ((0, 100), (466, 1079))
 
 GENERIC_CHESTS = (
     "Brightshine Jubilee Chest",
