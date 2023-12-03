@@ -1,4 +1,4 @@
-# used only when adding new images; resizes and creates colored backgrounds on all images
+# used only when adding new images
 
 import os
 from PIL import Image
