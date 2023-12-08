@@ -249,17 +249,19 @@ def choose_loot(matches):
     tempgui.title("Drop Selector")
     tempgui.attributes("-topmost", True)
 
-    description_lbl = tkinter.Label(tempgui, text="Multiple drops detected.\nChoose the correct drop(s)")
+    tempgui_font = font.Font(family="Segoe UI", size=9)
+
+    description_lbl = tkinter.Label(tempgui, text="Multiple drops detected.\nChoose the correct drop(s)", font=tempgui_font)
 
     drop_btns = []
     for drop in matches:
-        drop_btns.append(tkinter.Button(tempgui, text=drop[0], command=lambda: add_loot(drop[0], drop[1])))
+        drop_btns.append(tkinter.Button(tempgui, text=drop[0], command=lambda: add_loot(drop[0], drop[1]), font=tempgui_font))
     
     description_lbl.pack()
     for btn in drop_btns:
         btn.pack()
     
-    close_btn = tkinter.Button(tempgui, text="Close", command=lambda: tempgui.destroy())
+    close_btn = tkinter.Button(tempgui, text="Close", command=lambda: tempgui.destroy(), font=tempgui_font)
     close_btn.pack()
 
     tempgui.geometry(f"250x{len(drop_btns) * 35 + 85}")
