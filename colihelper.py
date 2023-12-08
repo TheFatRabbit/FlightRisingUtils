@@ -211,7 +211,7 @@ def submit_rename_most_recent_chest():
     most_recent_chest = "N/A"
 
 def fight_on():
-    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
 
     if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.97):
@@ -306,7 +306,7 @@ def increment_widget_value(widget):
     widget.config(text=f"{widget_str}{widget_num}")
    
 def check_active_window(button):
-    if (not pygetwindow.getActiveWindow().title.startswith("Flight Rising")):
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
     increment_widget_value(button)
 
@@ -315,7 +315,7 @@ def attack_and_abilities(key1, key2, key3):
     global anti_repeat
     if anti_repeat:
         return
-    if (not pygetwindow.getActiveWindow().title.startswith("Flight Rising")):
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
     
     anti_repeat = True
