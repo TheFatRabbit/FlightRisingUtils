@@ -324,7 +324,7 @@ venue_selector = tkinter.OptionMenu(gui, venue_choice, *G.VENUE_NAMES)
 venue_selector.pack()
 
 bold_font = font.nametofont("TkDefaultFont")
-bold_font.configure(weight="bold")
+bold_font.configure(weight="bold", size=11)
 
 most_recent_loot_entry = tkinter.Entry(gui, font=bold_font)
 raw_paste_box = tkinter.Entry(gui)
