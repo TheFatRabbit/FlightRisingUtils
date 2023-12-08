@@ -16,7 +16,7 @@ credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_k
 connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
 tracker_sheet = spreadsheet.worksheet("Master Item Tracker")
-stats_sheet = spreadsheet.worksheet("Stats and Pics") # C3 increment
+stats_sheet = spreadsheet.worksheet("Stats and Pics")
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")
@@ -217,9 +217,7 @@ def fight_on():
     if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.97):
         return
 
-    battles_str = total_battles_label.cget("text")
-    battles_num = int(battles_str[battles_str.index(": ")+2:]) + 1
-    total_battles_label.config(text=f"Battles: {battles_num}")
+    increment_widget_value(total_battles_label)
 
     loot_image = ImageGrab.grab(bbox=G.LOOT_ITEM_BOUNDS)
     loot_image.save(os.path.join(dirname, "recent_loot.png"))
@@ -278,7 +276,7 @@ def add_loot(name, type):
     name = name.replace("~~", ":")
 
     if type == "Common Chests":
-        increment_button_value(common_chest_btn)
+        increment_widget_value(common_chest_btn)
         return
 
     most_recent_loot_entry.insert(0, f"{name}, ")
@@ -301,16 +299,16 @@ def add_loot(name, type):
     if has_uploaded is None:
         has_uploaded = False
 
-def increment_button_value(button):
-    button_str = button.cget("text")
-    button_num = int(button_str[button_str.index(": ")+2:]) + 1
-    button_str = button_str[:button_str.index(": ")+2]
-    button.config(text=f"{button_str}{button_num}")
+def increment_widget_value(widget):
+    widget_str = widget.cget("text")
+    widget_num = int(widget_str[widget_str.index(": ")+2:]) + 1
+    widget_str = widget_str[:widget_str.index(": ")+2]
+    widget.config(text=f"{widget_str}{widget_num}")
    
 def check_active_window(button):
     if (not pygetwindow.getActiveWindow().title.startswith("Flight Rising")):
         return
-    increment_button_value(button)
+    increment_widget_value(button)
 
 anti_repeat = False
 def attack_and_abilities(key1, key2, key3):
@@ -346,7 +344,7 @@ loot_boxes = {
     "NonBoss Familiars": tkinter.Text(gui, width=22, height=11)
 }
 
-common_chest_btn = tkinter.Button(gui, text="Common chests: 0", command=lambda: increment_button_value(common_chest_btn))
+common_chest_btn = tkinter.Button(gui, text="Common chests: 0", command=lambda: increment_widget_value(common_chest_btn))
 
 to_sheet_button = tkinter.Button(gui, text="Send data to sheet", command=send_to_sheet)
 
@@ -370,11 +368,11 @@ manual_input_radios = (
 
 total_battles_label = tkinter.Label(gui, text="Battles: 0")
 
-currency_btn = tkinter.Button(gui, text="Fest Currency: 0", command=lambda: increment_button_value(currency_btn))
+currency_btn = tkinter.Button(gui, text="Fest Currency: 0", command=lambda: increment_widget_value(currency_btn))
 
-minor_hp_btn = tkinter.Button(gui, text="Minor HP Potions: 0", command=lambda: increment_button_value(minor_hp_btn))
-medium_hp_btn = tkinter.Button(gui, text="Medium HP Potions: 0", command=lambda: increment_button_value(medium_hp_btn))
-major_hp_btn = tkinter.Button(gui, text="Major HP Potions: 0", command=lambda: increment_button_value(major_hp_btn))
+minor_hp_btn = tkinter.Button(gui, text="Minor HP Potions: 0", command=lambda: increment_widget_value(minor_hp_btn))
+medium_hp_btn = tkinter.Button(gui, text="Medium HP Potions: 0", command=lambda: increment_widget_value(medium_hp_btn))
+major_hp_btn = tkinter.Button(gui, text="Major HP Potions: 0", command=lambda: increment_widget_value(major_hp_btn))
 
 most_recent_chest = "N/A"
 rename_recent_chest_btn = tkinter.Button(gui, text=f"Rename last chest", command=setup_rename_most_recent_chest)
