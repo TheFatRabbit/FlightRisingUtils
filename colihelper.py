@@ -15,7 +15,8 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
-sheet = spreadsheet.sheet1
+tracker_sheet = spreadsheet.worksheet("Master Item Tracker")
+stats_sheet = spreadsheet.worksheet("Stats and Pics")
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")
@@ -110,23 +111,28 @@ def send_to_sheet():
 
     for loot_type, loot_arr in loot.items():
         active_column = ""
-        for index, cell in enumerate(sheet.range("B3:G3")):
+        for index, cell in enumerate(tracker_sheet.range("B3:G3")):
             if cell.value == loot_type:
                 active_column = chr(ord("B") + index)
                 break
         
         active_row = ""
-        for index, cell in enumerate(sheet.range(f"{active_column}4:{active_column}")):
+        for index, cell in enumerate(tracker_sheet.range(f"{active_column}4:{active_column}")):
             if cell.value == "":
                 active_row = index + 4
                 break
 
         for loot_name in loot_arr:
-            sheet.update_acell(active_column + str(active_row), loot_name)
+            tracker_sheet.update_acell(active_column + str(active_row), loot_name)
             active_row += 1
-        
-        global has_uploaded
-        has_uploaded = True
+    
+    total_battles = total_battles_label.cget("text")
+    total_battles = int(total_battles[total_battles.index(": ")+2])
+    total_battles += int(stats_sheet.acell("C3").value)
+    stats_sheet.update_acell("C3", total_battles)
+
+    global has_uploaded
+    has_uploaded = True
 
 def setup_manual_input():
     manual_input_name_label.grid(row=6, column=0)
@@ -205,15 +211,13 @@ def submit_rename_most_recent_chest():
     most_recent_chest = "N/A"
 
 def fight_on():
-    if (pygetwindow.getActiveWindow().title != "Flight Rising - Brave"):
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
 
     if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.97):
         return
 
-    battles_str = total_battles_label.cget("text")
-    battles_num = int(battles_str[battles_str.index(": ")+2:]) + 1
-    total_battles_label.config(text=f"Battles: {battles_num}")
+    increment_widget_value(total_battles_label)
 
     loot_image = ImageGrab.grab(bbox=G.LOOT_ITEM_BOUNDS)
     loot_image.save(os.path.join(dirname, "recent_loot.png"))
@@ -249,17 +253,19 @@ def choose_loot(matches):
     tempgui.title("Drop Selector")
     tempgui.attributes("-topmost", True)
 
-    description_lbl = tkinter.Label(tempgui, text="Multiple drops detected.\nChoose the correct drop(s)")
+    tempgui_font = font.Font(family="Segoe UI", size=9)
+
+    description_lbl = tkinter.Label(tempgui, text="Multiple drops detected.\nChoose the correct drop(s)", font=tempgui_font)
 
     drop_btns = []
     for drop in matches:
-        drop_btns.append(tkinter.Button(tempgui, text=drop[0], command=lambda: add_loot(drop[0], drop[1])))
+        drop_btns.append(tkinter.Button(tempgui, text=drop[0], command=lambda: add_loot(drop[0], drop[1]), font=tempgui_font))
     
     description_lbl.pack()
     for btn in drop_btns:
         btn.pack()
     
-    close_btn = tkinter.Button(tempgui, text="Close", command=lambda: tempgui.destroy())
+    close_btn = tkinter.Button(tempgui, text="Close", command=lambda: tempgui.destroy(), font=tempgui_font)
     close_btn.pack()
 
     tempgui.geometry(f"250x{len(drop_btns) * 35 + 85}")
@@ -270,7 +276,7 @@ def add_loot(name, type):
     name = name.replace("~~", ":")
 
     if type == "Common Chests":
-        increment_button_value(common_chest_btn)
+        increment_widget_value(common_chest_btn)
         return
 
     most_recent_loot_entry.insert(0, f"{name}, ")
@@ -293,23 +299,23 @@ def add_loot(name, type):
     if has_uploaded is None:
         has_uploaded = False
 
-def increment_button_value(button):
-    button_str = button.cget("text")
-    button_num = int(button_str[button_str.index(": ")+2:]) + 1
-    button_str = button_str[:button_str.index(": ")+2]
-    button.config(text=f"{button_str}{button_num}")
+def increment_widget_value(widget):
+    widget_str = widget.cget("text")
+    widget_num = int(widget_str[widget_str.index(": ")+2:]) + 1
+    widget_str = widget_str[:widget_str.index(": ")+2]
+    widget.config(text=f"{widget_str}{widget_num}")
    
 def check_active_window(button):
-    if (not pygetwindow.getActiveWindow().title.startswith("Flight Rising")):
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
-    increment_button_value(button)
+    increment_widget_value(button)
 
 anti_repeat = False
 def attack_and_abilities(key1, key2, key3):
     global anti_repeat
     if anti_repeat:
         return
-    if (not pygetwindow.getActiveWindow().title.startswith("Flight Rising")):
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
     
     anti_repeat = True
@@ -338,7 +344,7 @@ loot_boxes = {
     "NonBoss Familiars": tkinter.Text(gui, width=22, height=11)
 }
 
-common_chest_btn = tkinter.Button(gui, text="Common chests: 0", command=lambda: increment_button_value(common_chest_btn))
+common_chest_btn = tkinter.Button(gui, text="Common chests: 0", command=lambda: increment_widget_value(common_chest_btn))
 
 to_sheet_button = tkinter.Button(gui, text="Send data to sheet", command=send_to_sheet)
 
@@ -362,11 +368,11 @@ manual_input_radios = (
 
 total_battles_label = tkinter.Label(gui, text="Battles: 0")
 
-currency_btn = tkinter.Button(gui, text="Fest Currency: 0", command=lambda: increment_button_value(currency_btn))
+currency_btn = tkinter.Button(gui, text="Fest Currency: 0", command=lambda: increment_widget_value(currency_btn))
 
-minor_hp_btn = tkinter.Button(gui, text="Minor HP Potions: 0", command=lambda: increment_button_value(minor_hp_btn))
-medium_hp_btn = tkinter.Button(gui, text="Medium HP Potions: 0", command=lambda: increment_button_value(medium_hp_btn))
-major_hp_btn = tkinter.Button(gui, text="Major HP Potions: 0", command=lambda: increment_button_value(major_hp_btn))
+minor_hp_btn = tkinter.Button(gui, text="Minor HP Potions: 0", command=lambda: increment_widget_value(minor_hp_btn))
+medium_hp_btn = tkinter.Button(gui, text="Medium HP Potions: 0", command=lambda: increment_widget_value(medium_hp_btn))
+major_hp_btn = tkinter.Button(gui, text="Major HP Potions: 0", command=lambda: increment_widget_value(major_hp_btn))
 
 most_recent_chest = "N/A"
 rename_recent_chest_btn = tkinter.Button(gui, text=f"Rename last chest", command=setup_rename_most_recent_chest)
