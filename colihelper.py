@@ -15,7 +15,8 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
-sheet = spreadsheet.sheet1
+tracker_sheet = spreadsheet.worksheet("Master Item Tracker")
+stats_sheet = spreadsheet.worksheet("Stats and Pics") # C3 increment
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")
@@ -110,23 +111,28 @@ def send_to_sheet():
 
     for loot_type, loot_arr in loot.items():
         active_column = ""
-        for index, cell in enumerate(sheet.range("B3:G3")):
+        for index, cell in enumerate(tracker_sheet.range("B3:G3")):
             if cell.value == loot_type:
                 active_column = chr(ord("B") + index)
                 break
         
         active_row = ""
-        for index, cell in enumerate(sheet.range(f"{active_column}4:{active_column}")):
+        for index, cell in enumerate(tracker_sheet.range(f"{active_column}4:{active_column}")):
             if cell.value == "":
                 active_row = index + 4
                 break
 
         for loot_name in loot_arr:
-            sheet.update_acell(active_column + str(active_row), loot_name)
+            tracker_sheet.update_acell(active_column + str(active_row), loot_name)
             active_row += 1
-        
-        global has_uploaded
-        has_uploaded = True
+    
+    total_battles = total_battles_label.cget("text")
+    total_battles = int(total_battles[total_battles.index(": ")+2])
+    total_battles += int(stats_sheet.acell("C3").value)
+    stats_sheet.update_acell("C3", total_battles)
+
+    global has_uploaded
+    has_uploaded = True
 
 def setup_manual_input():
     manual_input_name_label.grid(row=6, column=0)
