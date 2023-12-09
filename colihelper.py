@@ -127,7 +127,7 @@ def send_to_sheet():
             active_row += 1
     
     total_battles = total_battles_label.cget("text")
-    total_battles = int(total_battles[total_battles.index(": ")+2])
+    total_battles = int(total_battles[total_battles.index(": ")+2:])
     total_battles += int(stats_sheet.acell("C3").value)
     stats_sheet.update_acell("C3", total_battles)
 
@@ -259,7 +259,7 @@ def choose_loot(matches):
 
     drop_btns = []
     for drop in matches:
-        drop_btns.append(tkinter.Button(tempgui, text=drop[0], command=lambda: add_loot(drop[0], drop[1]), font=tempgui_font))
+        drop_btns.append(tkinter.Button(tempgui, text=drop[0], command=lambda drop=drop: add_loot(drop[0], drop[1]), font=tempgui_font))
     
     description_lbl.pack()
     for btn in drop_btns:
