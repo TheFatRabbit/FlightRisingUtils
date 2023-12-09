@@ -1,4 +1,4 @@
-DEFAULT_VENUE = "Redrock Cove"
+DEFAULT_VENUE = "Arena"
 
 FONT = "Helvetica 10"
 
