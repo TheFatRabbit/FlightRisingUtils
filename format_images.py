@@ -28,8 +28,8 @@ for folder_path in os.listdir(os.path.join(dirname, "images")):
                     os.remove(os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(" (1)", "")))
                 os.rename(os.path.join(dirname, "images", folder_path, subfolder_path, file_path), os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(" (1)", "")))
             for anc_name in ANCIENT_NAMES:
-                if anc_name in file_path:
-                    os.rename(os.path.join(dirname, "images", folder_path, subfolder_path, file_path), os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(f" ({anc_name})", "").replace(" Gene", f" {anc_name} Gene")))
+                if f"{anc_name} {anc_name}" in file_path:
+                    os.rename(os.path.join(dirname, "images", folder_path, subfolder_path, file_path), os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(f"{anc_name} {anc_name}", f"{anc_name}")))
 
 for folder_path in os.listdir(os.path.join(dirname, "images")):
     if ".png" in folder_path:
