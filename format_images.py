@@ -5,6 +5,17 @@ from PIL import Image
 
 dirname = os.path.dirname(__file__)
 
+ANCIENT_NAMES = (
+    "Aberration",
+    "Aether",
+    "Auraboa",
+    "Banescale",
+    "Gaoler",
+    "Sandsurge",
+    "Undertide",
+    "Veilspun"
+)
+
 for folder_path in os.listdir(os.path.join(dirname, "images")):
     if ".png" in folder_path:
         continue
@@ -16,6 +27,9 @@ for folder_path in os.listdir(os.path.join(dirname, "images")):
                 if os.path.isfile(os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(" (1)", ""))):
                     os.remove(os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(" (1)", "")))
                 os.rename(os.path.join(dirname, "images", folder_path, subfolder_path, file_path), os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(" (1)", "")))
+            for anc_name in ANCIENT_NAMES:
+                if anc_name in file_path:
+                    os.rename(os.path.join(dirname, "images", folder_path, subfolder_path, file_path), os.path.join(dirname, "images", folder_path, subfolder_path, file_path.replace(f" ({anc_name})", "").replace(" Gene", f" {anc_name} Gene")))
 
 for folder_path in os.listdir(os.path.join(dirname, "images")):
     if ".png" in folder_path:
