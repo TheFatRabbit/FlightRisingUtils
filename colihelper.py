@@ -116,12 +116,17 @@ def send_to_sheet():
                 active_column = chr(ord("B") + index)
                 break
         
-        active_row = ""
-        for index, cell in enumerate(tracker_sheet.range(f"{active_column}4:{active_column}")):
-            if cell.value == "":
-                active_row = index + 4
-                break
+        active_row = tracker_sheet.acell(f"{active_column}4")
+        active_row = str(int(active_row[active_row.index(": ")+2:])+5)
 
+        # instead of this, retrieve the value by parsing Cell(Col, 4)
+        # active_row = ""
+        # for index, cell in enumerate(tracker_sheet.range(f"{active_column}5:{active_column}")):
+        #     if cell.value == "":
+        #         active_row = index + 4
+        #         break
+
+        # change to bulk addition
         for loot_name in loot_arr:
             tracker_sheet.update_acell(active_column + str(active_row), loot_name)
             active_row += 1
