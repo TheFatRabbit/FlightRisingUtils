@@ -15,8 +15,8 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
-tracker_sheet = spreadsheet.worksheet("Master Item Tracker")
-stats_sheet = spreadsheet.worksheet("Stats and Pics")
+tracker_sheet = spreadsheet.worksheet(G.TRACKER_SHEET_NAME)
+stats_sheet = spreadsheet.worksheet(G.STATS_SHEET_NAME)
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")

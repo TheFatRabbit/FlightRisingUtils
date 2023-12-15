@@ -10,6 +10,10 @@ COLI_SCREEN_BOUNDS = (700, 400, 1400, 930)
 
 LEFT_SCREEN_BBOX = ((0, 100), (466, 1079))
 
+TRACKER_SHEET_NAME = "Master Item Tracker"
+
+STATS_SHEET_NAME = "Stats and Pics"
+
 VENUE_NAMES = (
     "Training Fields",
     "Woodland Path",
