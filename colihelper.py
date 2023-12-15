@@ -117,7 +117,9 @@ def send_to_sheet():
                 break
         
         active_row = tracker_sheet.acell(f"{active_column}4")
-        active_row = str(int(active_row[active_row.index(": ")+2:])+5)
+        active_row = int(active_row[active_row.index(": ")+2:])+5
+        final_row = str(active_row + len(loot_arr)-1)
+        active_row = str(active_row)
 
         # instead of this, retrieve the value by parsing Cell(Col, 4)
         # active_row = ""
@@ -126,10 +128,16 @@ def send_to_sheet():
         #         active_row = index + 4
         #         break
 
+        cells_to_update = tracker_sheet.range(f"{active_column}{active_row}:{active_column}{final_row}")
+        for cell, loot_value in zip(cells_to_update, loot_arr):
+            cell.value = loot_value
+
+        tracker_sheet.update_cells(cells_to_update)
+
         # change to bulk addition
-        for loot_name in loot_arr:
-            tracker_sheet.update_acell(active_column + str(active_row), loot_name)
-            active_row += 1
+        # for loot_name in loot_arr:
+        #     tracker_sheet.update_acell(active_column + str(active_row), loot_name)
+        #     active_row += 1
     
     total_battles = total_battles_label.cget("text")
     total_battles = int(total_battles[total_battles.index(": ")+2:])
