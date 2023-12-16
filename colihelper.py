@@ -110,35 +110,28 @@ def send_to_sheet():
     }
 
     for loot_type, loot_arr in loot.items():
+        if len(loot_arr) == 1:
+            continue
+        else:
+            loot_arr.pop()
+
         active_column = ""
         for index, cell in enumerate(tracker_sheet.range("B3:G3")):
             if cell.value == loot_type:
                 active_column = chr(ord("B") + index)
                 break
         
-        active_row = tracker_sheet.acell(f"{active_column}4")
-        active_row = int(active_row[active_row.index(": ")+2:])+5
-        final_row = str(active_row + len(loot_arr)-1)
-        active_row = str(active_row)
+        start_row = tracker_sheet.acell(f"{active_column}4")
+        start_row = int(start_row.value[start_row.value.index(": ")+2:])+5
+        final_row = str(start_row + len(loot_arr)-1)
+        start_row = str(start_row)
 
-        # instead of this, retrieve the value by parsing Cell(Col, 4)
-        # active_row = ""
-        # for index, cell in enumerate(tracker_sheet.range(f"{active_column}5:{active_column}")):
-        #     if cell.value == "":
-        #         active_row = index + 4
-        #         break
-
-        cells_to_update = tracker_sheet.range(f"{active_column}{active_row}:{active_column}{final_row}")
+        cells_to_update = tracker_sheet.range(f"{active_column}{start_row}:{active_column}{final_row}")
         for cell, loot_value in zip(cells_to_update, loot_arr):
             cell.value = loot_value
 
         tracker_sheet.update_cells(cells_to_update)
 
-        # change to bulk addition
-        # for loot_name in loot_arr:
-        #     tracker_sheet.update_acell(active_column + str(active_row), loot_name)
-        #     active_row += 1
-    
     total_battles = total_battles_label.cget("text")
     total_battles = int(total_battles[total_battles.index(": ")+2:])
     total_battles += int(stats_sheet.acell("C3").value)
