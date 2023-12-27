@@ -1,4 +1,5 @@
 import os
+import json
 import gspread
 import oauth2client.service_account
 import pyautogui
@@ -10,6 +11,8 @@ from PIL import ImageGrab, ImageTk
 import globals as G
 
 dirname = os.path.dirname(__file__)
+
+states = json.load(open("states.json"))
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
@@ -33,19 +36,41 @@ def lock_in_venue():
 
     global venue
     venue = venue_choice.get()
+    states["last_venue"] = venue
     venue_selector.destroy()
     venue_confirm.destroy()
 
-    keyboard.add_hotkey("1", lambda: attack_and_abilities("a", "e", "q"))
-    keyboard.add_hotkey("2", lambda: attack_and_abilities("a", "e", "w"))
-    keyboard.add_hotkey("3", lambda: attack_and_abilities("a", "e", "e"))
-    keyboard.add_hotkey("4", lambda: attack_and_abilities("a", "e", "r"))
-    keyboard.add_hotkey("q", lambda: attack_and_abilities("a", "a", "q"))
-    keyboard.add_hotkey("w", lambda: attack_and_abilities("a", "a", "w"))
-    keyboard.add_hotkey("e", lambda: attack_and_abilities("a", "a", "e"))
-    keyboard.add_hotkey("r", lambda: attack_and_abilities("a", "a", "r"))
-    keyboard.add_hotkey("t", lambda: attack_and_abilities("a", "s", "a"))
-    keyboard.add_hotkey("y", lambda: attack_and_abilities("a", "d", "a"))
+    if venue == "Golem Workshop":
+        keyboard.add_hotkey("1", lambda: attack_and_abilities("a", "e", "q"))
+        keyboard.add_hotkey("2", lambda: attack_and_abilities("a", "e", "w"))
+        keyboard.add_hotkey("3", lambda: attack_and_abilities("a", "e", "e"))
+        keyboard.add_hotkey("4", lambda: attack_and_abilities("a", "e", "r"))
+
+        keyboard.add_hotkey("q", lambda: attack_and_abilities("a", "a", "q"))
+        keyboard.add_hotkey("w", lambda: attack_and_abilities("a", "a", "w"))
+        keyboard.add_hotkey("e", lambda: attack_and_abilities("a", "a", "e"))
+        keyboard.add_hotkey("r", lambda: attack_and_abilities("a", "a", "r"))
+
+        keyboard.add_hotkey("5", lambda: attack_and_abilities("a", "s", "a"))
+        keyboard.add_hotkey("6", lambda: attack_and_abilities("a", "s", "s"))
+        keyboard.add_hotkey("7", lambda: attack_and_abilities("a", "s", "d"))
+
+        keyboard.add_hotkey("t", lambda: attack_and_abilities("a", "s", "a"))
+        keyboard.add_hotkey("y", lambda: attack_and_abilities("a", "s", "s"))
+        keyboard.add_hotkey("u", lambda: attack_and_abilities("a", "s", "d"))
+    else:
+        keyboard.add_hotkey("1", lambda: attack_and_abilities("a", "e", "q"))
+        keyboard.add_hotkey("2", lambda: attack_and_abilities("a", "e", "w"))
+        keyboard.add_hotkey("3", lambda: attack_and_abilities("a", "e", "e"))
+        keyboard.add_hotkey("4", lambda: attack_and_abilities("a", "e", "r"))
+
+        keyboard.add_hotkey("q", lambda: attack_and_abilities("a", "a", "q"))
+        keyboard.add_hotkey("w", lambda: attack_and_abilities("a", "a", "w"))
+        keyboard.add_hotkey("e", lambda: attack_and_abilities("a", "a", "e"))
+        keyboard.add_hotkey("r", lambda: attack_and_abilities("a", "a", "r"))
+
+        keyboard.add_hotkey("t", lambda: attack_and_abilities("a", "s", "a"))
+        keyboard.add_hotkey("y", lambda: attack_and_abilities("a", "d", "a"))
 
     keyboard.add_hotkey("space", fight_on)
 
@@ -93,6 +118,9 @@ def lock_in_venue():
     rename_recent_chest_btn.grid(row=12, column=0, columnspan=3)
 
 def close_action():
+    with open("states.json", "w") as json_file:
+        json.dump(states, json_file, indent=2)
+
     if has_uploaded is not None and not has_uploaded:
         if messagebox.askokcancel("Exit", "Confirm exit? You have not yet uploaded data to the sheet."):
             gui.destroy()
@@ -316,22 +344,22 @@ def check_active_window(button):
         return
     increment_widget_value(button)
 
-anti_repeat = False
+is_attacking = False
 def attack_and_abilities(key1, key2, key3):
-    global anti_repeat
-    if anti_repeat:
+    global is_attacking
+    if is_attacking:
         return
     if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
     
-    anti_repeat = True
+    is_attacking = True
     pyautogui.press(key1)
     pyautogui.press(key2)
     pyautogui.press(key3)
-    anti_repeat = False
+    is_attacking = False
 
 venue_choice = StringVar()
-venue_choice.set(G.DEFAULT_VENUE)
+venue_choice.set(states["last_venue"])
 venue_selector = tkinter.OptionMenu(gui, venue_choice, *G.VENUE_NAMES)
 venue_selector.pack()
 

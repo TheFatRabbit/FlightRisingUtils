@@ -1,5 +1,3 @@
-DEFAULT_VENUE = "Arena"
-
 FONT = "Helvetica 10"
 
 LOOT_TITLE_BOUNDS = (1250, 450, 1367, 507)
