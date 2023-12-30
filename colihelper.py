@@ -160,10 +160,12 @@ def send_to_sheet():
 
         tracker_sheet.update_cells(cells_to_update)
 
-    total_battles = total_battles_label.cget("text")
-    total_battles = int(total_battles[total_battles.index(": ")+2:])
-    total_battles += int(stats_sheet.acell("C3").value)
+    new_battles = total_battles_label.cget("text")
+    new_battles = int(new_battles[new_battles.index(": ")+2:])
+    total_battles = new_battles + int(stats_sheet.acell("C3").value)
+    battles_this_event = new_battles + int(stats_sheet.acell("C4").value)
     stats_sheet.update_acell("C3", total_battles)
+    stats_sheet.update_acell("C4", battles_this_event)
 
     global has_uploaded
     has_uploaded = True
