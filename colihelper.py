@@ -83,7 +83,6 @@ def lock_in_venue():
     most_recent_loot_entry.grid(row=0, column=0, columnspan=3, sticky="nsew")
 
     raw_paste_box.grid(row=1, column=0, columnspan=3, sticky="nsew")
-    raw_paste_box.insert(0, "Raw: ")
 
     loot_boxes["Apparel"].grid(row=2, column=0)
     loot_boxes["Battle Stones"].grid(row=2, column=1)
