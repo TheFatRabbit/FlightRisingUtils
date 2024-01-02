@@ -12,6 +12,8 @@ import globals as G
 
 dirname = os.path.dirname(__file__)
 
+pyautogui.FAILSAFE = False
+
 states = json.load(open("states.json"))
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
