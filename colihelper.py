@@ -279,14 +279,14 @@ def search_loot(loot_image):
                 continue
             location = pyautogui.locate(os.path.join(dirname, "images", venue, folder_path, image_filename), loot_image, confidence=0.922)
             if location:
-                match_list.append((image_filename.replace(".png", ""), folder_path))
+                match_list.append((image_filename.replace(".png", "").replace("~~", ":"), folder_path))
     for folder_path in os.listdir(os.path.join(dirname, "images", "Universal")):
-        for image_filename in os.listdir(os.path.join(dirname, "images", venue, folder_path)):
+        for image_filename in os.listdir(os.path.join(dirname, "images", "Universal", folder_path)):
             if ".ini" in image_filename:
                 continue
-            location = pyautogui.locate(os.path.join(dirname, "images", venue, folder_path, image_filename), loot_image, confidence=0.922)
+            location = pyautogui.locate(os.path.join(dirname, "images", "Universal", folder_path, image_filename), loot_image, confidence=0.922)
             if location:
-                match_list.append((image_filename.replace(".png", ""), folder_path))
+                match_list.append((image_filename.replace(".png", "").replace("~~", ":"), folder_path))
     if len(match_list) == 1:
         add_loot(match_list[0][0], match_list[0][1])
     elif len(match_list) > 1:
@@ -317,8 +317,6 @@ def choose_loot(matches):
     tempgui.mainloop()
 
 def add_loot(name, type):
-    name = name.replace("~~", ":")
-
     if type == "Common Chests":
         increment_widget_value(common_chest_btn)
         return
