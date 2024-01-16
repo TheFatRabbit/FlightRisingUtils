@@ -8,7 +8,7 @@ COLI_SCREEN_BOUNDS = (477, 400, 1400, 930)
 
 LEFT_SCREEN_BBOX = ((0, 100), (466, 1079))
 
-TRACKER_SHEET_NAME = "Master Item Tracker"
+DATA_SHEET_NAME = "Session Data"
 
 STATS_SHEET_NAME = "Stats and Pics"
 

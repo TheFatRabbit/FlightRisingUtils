@@ -8,6 +8,7 @@ import keyboard
 import tkinter
 from tkinter import font, messagebox, StringVar
 from PIL import ImageGrab, ImageTk
+from datetime import datetime
 import globals as G
 
 dirname = os.path.dirname(__file__)
@@ -20,7 +21,7 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
-tracker_sheet = spreadsheet.worksheet(G.TRACKER_SHEET_NAME)
+data_sheet = spreadsheet.worksheet(G.DATA_SHEET_NAME)
 stats_sheet = spreadsheet.worksheet(G.STATS_SHEET_NAME)
 
 gui = tkinter.Tk()
@@ -130,43 +131,28 @@ def close_action():
 
 def send_to_sheet():
     loot = {
-        "Apparel": loot_boxes["Apparel"].get("2.0", "end").split("\n"),
-        "Battle Stones": loot_boxes["Battle Stones"].get("2.0", "end").split("\n"),
-        "Boss Familiars": loot_boxes["Boss Familiars"].get("2.0", "end").split("\n"),
-        "Genes": loot_boxes["Genes"].get("2.0", "end").split("\n"),
-        "Miscellaneous": loot_boxes["Miscellaneous"].get("2.0", "end").split("\n"),
-        "NonBoss Familiars": loot_boxes["NonBoss Familiars"].get("2.0", "end").split("\n")
+        "Apparel": loot_boxes["Apparel"].get("2.0", "end").replace("\n", ", "),
+        "Battle Stones": loot_boxes["Battle Stones"].get("2.0", "end").replace("\n", ", "),
+        "Boss Familiars": loot_boxes["Boss Familiars"].get("2.0", "end").replace("\n", ", "),
+        "Genes": loot_boxes["Genes"].get("2.0", "end").replace("\n", ", "),
+        "Miscellaneous": loot_boxes["Miscellaneous"].get("2.0", "end").replace("\n", ", "),
+        "NonBoss Familiars": loot_boxes["NonBoss Familiars"].get("2.0", "end").replace("\n", ", ")
     }
 
-    for loot_type, loot_arr in loot.items():
-        if len(loot_arr) == 1:
+    active_row = int(stats_sheet.acell("C6").value)+2
+    range_to_edit = data_sheet.range(active_row, 1, active_row, 9)
+    range_to_edit[0].value = datetime.today().strftime("%m/%d/%Y")
+    range_to_edit[1].value = venue
+    num_battles = total_battles_label.cget("text")
+    range_to_edit[2].value = num_battles[9:]
+    
+    for i, loot_arr in enumerate(loot.values()):
+        if len(loot_arr) == 0:
             continue
-        else:
-            loot_arr.pop()
+        loot_arr = loot_arr[:-2]
+        range_to_edit[i+3].value = loot_arr
 
-        active_column = ""
-        for index, cell in enumerate(tracker_sheet.range("B3:G3")):
-            if cell.value == loot_type:
-                active_column = chr(ord("B") + index)
-                break
-        
-        start_row = tracker_sheet.acell(f"{active_column}4")
-        start_row = int(start_row.value[start_row.value.index(": ")+2:])+5
-        final_row = str(start_row + len(loot_arr)-1)
-        start_row = str(start_row)
-
-        cells_to_update = tracker_sheet.range(f"{active_column}{start_row}:{active_column}{final_row}")
-        for cell, loot_value in zip(cells_to_update, loot_arr):
-            cell.value = loot_value
-
-        tracker_sheet.update_cells(cells_to_update)
-
-    new_battles = total_battles_label.cget("text")
-    new_battles = int(new_battles[new_battles.index(": ")+2:])
-    total_battles = new_battles + int(stats_sheet.acell("C3").value)
-    battles_this_event = new_battles + int(stats_sheet.acell("C4").value)
-    stats_sheet.update_acell("C3", total_battles)
-    stats_sheet.update_acell("C4", battles_this_event)
+    data_sheet.update_cells(range_to_edit)
 
     global has_uploaded
     has_uploaded = True
