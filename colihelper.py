@@ -152,7 +152,7 @@ def send_to_sheet():
         loot_arr = loot_arr[:-2]
         range_to_edit[i+3].value = loot_arr
 
-    data_sheet.update_cells(range_to_edit)
+    data_sheet.update_cells(range_to_edit, value_input_option="USER_ENTERED")
 
     global has_uploaded
     has_uploaded = True
