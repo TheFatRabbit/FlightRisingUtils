@@ -12,6 +12,37 @@ DATA_SHEET_NAME = "Session Data"
 
 STATS_SHEET_NAME = "Stats and Pics"
 
+KEYBINDS = {
+    "Default": {
+        "1": ["a", "e", "q"],
+        "2": ["a", "e", "w"],
+        "3": ["a", "e", "e"],
+        "4": ["a", "e", "r"],
+        "q": ["a", "a", "q"],
+        "w": ["a", "a", "w"],
+        "e": ["a", "a", "e"],
+        "r": ["a", "a", "r"],
+        "t": ["a", "s", "a"],
+        "y": ["a", "d", "a"],
+    },
+    "Golem Workshop": {
+        "1": ["a", "e", "q"],
+        "2": ["a", "e", "w"],
+        "3": ["a", "e", "e"],
+        "4": ["a", "e", "r"],
+        "q": ["a", "a", "q"],
+        "w": ["a", "a", "w"],
+        "e": ["a", "a", "e"],
+        "r": ["a", "a", "r"],
+        "5": ["a", "s", "a"],
+        "6": ["a", "s", "s"],
+        "7": ["a", "s", "d"],
+        "t": ["a", "d", "a"],
+        "y": ["a", "d", "s"],
+        "u": ["a", "d", "d"],
+    }
+}
+
 VENUE_NAMES = (
     "Training Fields",
     "Woodland Path",

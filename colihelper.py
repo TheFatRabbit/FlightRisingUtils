@@ -43,37 +43,10 @@ def lock_in_venue():
     venue_selector.destroy()
     venue_confirm.destroy()
 
-    if venue == "Golem Workshop":
-        keyboard.add_hotkey("1", lambda: attack_and_abilities("a", "e", "q"))
-        keyboard.add_hotkey("2", lambda: attack_and_abilities("a", "e", "w"))
-        keyboard.add_hotkey("3", lambda: attack_and_abilities("a", "e", "e"))
-        keyboard.add_hotkey("4", lambda: attack_and_abilities("a", "e", "r"))
-
-        keyboard.add_hotkey("q", lambda: attack_and_abilities("a", "a", "q"))
-        keyboard.add_hotkey("w", lambda: attack_and_abilities("a", "a", "w"))
-        keyboard.add_hotkey("e", lambda: attack_and_abilities("a", "a", "e"))
-        keyboard.add_hotkey("r", lambda: attack_and_abilities("a", "a", "r"))
-
-        keyboard.add_hotkey("5", lambda: attack_and_abilities("a", "s", "a"))
-        keyboard.add_hotkey("6", lambda: attack_and_abilities("a", "s", "s"))
-        keyboard.add_hotkey("7", lambda: attack_and_abilities("a", "s", "d"))
-
-        keyboard.add_hotkey("t", lambda: attack_and_abilities("a", "s", "a"))
-        keyboard.add_hotkey("y", lambda: attack_and_abilities("a", "s", "s"))
-        keyboard.add_hotkey("u", lambda: attack_and_abilities("a", "s", "d"))
-    else:
-        keyboard.add_hotkey("1", lambda: attack_and_abilities("a", "e", "q"))
-        keyboard.add_hotkey("2", lambda: attack_and_abilities("a", "e", "w"))
-        keyboard.add_hotkey("3", lambda: attack_and_abilities("a", "e", "e"))
-        keyboard.add_hotkey("4", lambda: attack_and_abilities("a", "e", "r"))
-
-        keyboard.add_hotkey("q", lambda: attack_and_abilities("a", "a", "q"))
-        keyboard.add_hotkey("w", lambda: attack_and_abilities("a", "a", "w"))
-        keyboard.add_hotkey("e", lambda: attack_and_abilities("a", "a", "e"))
-        keyboard.add_hotkey("r", lambda: attack_and_abilities("a", "a", "r"))
-
-        keyboard.add_hotkey("t", lambda: attack_and_abilities("a", "s", "a"))
-        keyboard.add_hotkey("y", lambda: attack_and_abilities("a", "d", "a"))
+    for keybind_venue, keybinds in G.KEYBINDS.items():
+        if keybind_venue == venue:
+            for trigger, result in keybinds.items():
+                keyboard.add_hotkey(trigger, lambda: attack_and_abilities(result))
 
     keyboard.add_hotkey("space", fight_on)
 
@@ -339,17 +312,17 @@ def check_active_window(button):
     increment_widget_value(button)
 
 is_attacking = False
-def attack_and_abilities(key1, key2, key3):
+def attack_and_abilities(keys):
     global is_attacking
     if is_attacking:
         return
-    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave": # PERFORMANCE TEST WITH THIS VS ONLY CHECKING ON FIRST ITERATION
         return
     
     is_attacking = True
-    pyautogui.press(key1)
-    pyautogui.press(key2)
-    pyautogui.press(key3)
+    pyautogui.press(keys[0])
+    pyautogui.press(keys[1])
+    pyautogui.press(keys[2])
     is_attacking = False
 
 venue_choice = StringVar()
