@@ -15,8 +15,14 @@ dirname = os.path.dirname(__file__)
 
 if not os.path.isfile(os.path.join(dirname, "states.json")):
     with open(os.path.join(dirname, "states.json"), "w") as states_file:
-        json.dump(G.STATES, states_file, indent=2)
+        json.dump(G.DEFAULT_STATES, states_file, indent=2)
 states = json.load(open("states.json"))
+if len(states) != len(G.DEFAULT_STATES):
+    for key, value in states.items():
+        if key in G.DEFAULT_STATES.keys():
+            G.DEFAULT_STATES[key] = states[key]
+    with open(os.path.join(dirname, "states.json"), "w") as states_file:
+        json.dump(G.DEFAULT_STATES, states_file, indent=2)
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)

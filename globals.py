@@ -43,7 +43,7 @@ KEYBINDS = {
     }
 }
 
-STATES = {
+DEFAULT_STATES = {
     "last_venue": "Training Fields"
 }
 
