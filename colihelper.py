@@ -52,10 +52,15 @@ def lock_in_venue():
     venue_selector.destroy()
     venue_confirm.destroy()
 
+    found_venue = False
     for keybind_venue, keybinds in G.KEYBINDS.items():
         if keybind_venue == venue:
             for trigger, result in keybinds.items():
-                keyboard.add_hotkey(trigger, lambda: attack_and_abilities(result))
+                keyboard.add_hotkey(trigger, lambda result=result: attack_and_abilities(result))
+            found_venue = True
+    if not found_venue:
+        for trigger, result in G.KEYBINDS["Default"].items():
+            keyboard.add_hotkey(trigger, lambda result=result: attack_and_abilities(result))
 
     keyboard.add_hotkey("space", fight_on)
 
