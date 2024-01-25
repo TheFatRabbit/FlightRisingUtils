@@ -43,6 +43,10 @@ KEYBINDS = {
     }
 }
 
+STATES = {
+    "last_venue": "Training Fields"
+}
+
 VENUE_NAMES = (
     "Training Fields",
     "Woodland Path",

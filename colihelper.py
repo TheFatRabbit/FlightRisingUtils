@@ -13,8 +13,9 @@ import globals as G
 
 dirname = os.path.dirname(__file__)
 
-pyautogui.FAILSAFE = False
-
+if not os.path.isfile(os.path.join(dirname, "states.json")):
+    with open(os.path.join(dirname, "states.json"), "w") as states_file:
+        json.dump(G.STATES, states_file, indent=2)
 states = json.load(open("states.json"))
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -23,6 +24,8 @@ connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
 data_sheet = spreadsheet.worksheet(G.DATA_SHEET_NAME)
 stats_sheet = spreadsheet.worksheet(G.STATS_SHEET_NAME)
+
+pyautogui.FAILSAFE = False
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")
