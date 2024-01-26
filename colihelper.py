@@ -126,7 +126,7 @@ def send_to_sheet():
         "NonBoss Familiars": loot_boxes["NonBoss Familiars"].get("2.0", "end").replace("\n", ", ")
     }
 
-    active_row = int(stats_sheet.acell("C6").value)+2
+    active_row = int(stats_sheet.acell("D6").value)+2
     range_to_edit = data_sheet.range(active_row, 1, active_row, 9)
     range_to_edit[0].value = datetime.today().strftime("%m/%d/%Y")
     range_to_edit[1].value = venue
