@@ -239,7 +239,7 @@ def fight_on():
     recent_loot_label.config(image=gui_loot_image)
     recent_loot_label.image = gui_loot_image
 
-    pyautogui.moveTo(1200, 800)
+    pyautogui.moveTo(1250, 850)
     pyautogui.click()
 
     search_loot(loot_image)
