@@ -35,8 +35,8 @@ pyautogui.FAILSAFE = False
 
 gui = tkinter.Tk()
 gui.title("FR Coli Helper")
-gui.geometry(f"{G.LEFT_SCREEN_BBOX[1][0]-G.LEFT_SCREEN_BBOX[0][0]}x{G.LEFT_SCREEN_BBOX[1][1]-G.LEFT_SCREEN_BBOX[0][1]}")
-gui.geometry(f"+{G.LEFT_SCREEN_BBOX[0][0]}+{G.LEFT_SCREEN_BBOX[0][1]}")
+gui.geometry(f"{G.GUI_BOUNDS[2]-G.GUI_BOUNDS[0]}x{G.GUI_BOUNDS[3]-G.GUI_BOUNDS[1]}")
+gui.geometry(f"+{G.GUI_BOUNDS[0]}+{G.GUI_BOUNDS[1]}")
 gui.attributes("-topmost", True)
 gui.option_add("*font", G.FONT)
 
@@ -64,11 +64,13 @@ def lock_in_venue():
 
     keyboard.add_hotkey("space", fight_on)
 
-    keyboard.add_hotkey("z", lambda: check_active_window(currency_btn))
+    keyboard.add_hotkey("z", lambda: widget_value_window_check(currency_btn))
 
-    keyboard.add_hotkey("/", lambda: check_active_window(minor_hp_btn))
-    keyboard.add_hotkey("*", lambda: check_active_window(medium_hp_btn))
-    keyboard.add_hotkey("-", lambda: check_active_window(major_hp_btn))
+    keyboard.add_hotkey("/", lambda: widget_value_window_check(minor_hp_btn))
+    keyboard.add_hotkey("*", lambda: widget_value_window_check(medium_hp_btn))
+    keyboard.add_hotkey("-", lambda: widget_value_window_check(major_hp_btn))
+
+    keyboard.add_hotkey("`", save_captcha)
 
     most_recent_loot_entry.grid(row=0, column=0, columnspan=3, sticky="nsew")
 
@@ -108,7 +110,7 @@ def lock_in_venue():
 
 def close_action():
     with open("states.json", "w") as json_file:
-        json.dump(states, json_file, indent=2)
+        json.dump(states, json_file, indent=4)
 
     if has_uploaded is not None and not has_uploaded:
         if messagebox.askokcancel("Exit", "Confirm exit? You have not yet uploaded data to the sheet."):
@@ -320,7 +322,7 @@ def increment_widget_value(widget):
     widget_str = widget_str[:widget_str.index(": ")+2]
     widget.config(text=f"{widget_str}{widget_num}")
    
-def check_active_window(button):
+def widget_value_window_check(button):
     if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
     increment_widget_value(button)
@@ -338,6 +340,13 @@ def attack_and_abilities(keys):
     pyautogui.press(keys[1])
     pyautogui.press(keys[2])
     is_attacking = False
+
+def save_captcha():
+    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
+        return
+    
+    captcha_image = ImageGrab.grab(bbox=G.CAPTCHA_BOUNDS)
+    captcha_image.save(os.path.join(dirname, "captchas", f"captcha{len(os.listdir(os.path.join(dirname, 'captchas')))}.png"))
 
 venue_choice = StringVar()
 venue_choice.set(states["last_venue"])
