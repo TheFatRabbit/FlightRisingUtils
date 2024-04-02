@@ -345,6 +345,9 @@ def save_captcha():
     if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
         return
     
+    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "camping.png"), region=G.CAMPING_TITLE_BOUNDS, confidence=0.97):
+        return
+    
     captcha_image = ImageGrab.grab(bbox=G.CAPTCHA_BOUNDS)
     captcha_image.save(os.path.join(dirname, "captchas", f"captcha{len(os.listdir(os.path.join(dirname, 'captchas')))}.png"))
 
