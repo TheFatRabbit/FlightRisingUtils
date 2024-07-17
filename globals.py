@@ -55,6 +55,7 @@ VENUE_NAMES = (
     "Training Fields",
     "Woodland Path",
     "Scorched Forest",
+    "Boneyard",
     "Sandswept Delta",
     "Silk-Strewn Wreckage",
     "Blooming Grove",
