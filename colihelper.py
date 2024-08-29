@@ -223,7 +223,7 @@ def submit_rename_most_recent_chest():
     most_recent_chest = "N/A"
 
 def fight_on():
-    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
+    if pygetwindow.getActiveWindow().title != "Flight Rising — Mozilla Firefox":
         return
 
     if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.97):
@@ -252,15 +252,21 @@ def search_loot(loot_image):
         for image_filename in os.listdir(os.path.join(dirname, "images", venue, folder_path)):
             if ".ini" in image_filename:
                 continue
-            location = pyautogui.locate(os.path.join(dirname, "images", venue, folder_path, image_filename), loot_image, confidence=0.922)
-            if location:
+            try:
+                location = pyautogui.locate(os.path.join(dirname, "images", venue, folder_path, image_filename), loot_image, confidence=0.922)
+            except pyautogui.ImageNotFoundException:
+                pass
+            else:
                 match_list.append((image_filename.replace(".png", "").replace("~~", ":"), folder_path))
     for folder_path in os.listdir(os.path.join(dirname, "images", "Universal")):
         for image_filename in os.listdir(os.path.join(dirname, "images", "Universal", folder_path)):
             if ".ini" in image_filename:
                 continue
-            location = pyautogui.locate(os.path.join(dirname, "images", "Universal", folder_path, image_filename), loot_image, confidence=0.922)
-            if location:
+            try:
+                location = pyautogui.locate(os.path.join(dirname, "images", "Universal", folder_path, image_filename), loot_image, confidence=0.922)
+            except pyautogui.ImageNotFoundException:
+                pass
+            else:
                 match_list.append((image_filename.replace(".png", "").replace("~~", ":"), folder_path))
     if len(match_list) == 1:
         add_loot(match_list[0][0], match_list[0][1])
@@ -323,7 +329,7 @@ def increment_widget_value(widget):
     widget.config(text=f"{widget_str}{widget_num}")
    
 def widget_value_window_check(button):
-    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
+    if pygetwindow.getActiveWindow().title != "Flight Rising — Mozilla Firefox":
         return
     increment_widget_value(button)
 
@@ -332,7 +338,7 @@ def attack_and_abilities(keys):
     global is_attacking
     if is_attacking:
         return
-    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave": # PERFORMANCE TEST WITH THIS VS ONLY CHECKING ON FIRST ITERATION
+    if pygetwindow.getActiveWindow().title != "Flight Rising — Mozilla Firefox":
         return
     
     is_attacking = True
@@ -342,7 +348,7 @@ def attack_and_abilities(keys):
     is_attacking = False
 
 def save_captcha():
-    if pygetwindow.getActiveWindow().title != "Flight Rising - Brave":
+    if pygetwindow.getActiveWindow().title != "Flight Rising — Mozilla Firefox":
         return
     
     if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "camping.png"), region=G.CAMPING_TITLE_BOUNDS, confidence=0.97):
