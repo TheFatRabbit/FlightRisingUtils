@@ -19,9 +19,9 @@ if not os.path.isfile(os.path.join(dirname, "states.json")):
         json.dump(G.DEFAULT_STATES, states_file, indent=2)
 states = json.load(open("states.json"))
 if len(states) != len(G.DEFAULT_STATES):
-    for key, value in states.items():
-        if key in G.DEFAULT_STATES.keys():
-            G.DEFAULT_STATES[key] = states[key]
+    for key, value in G.DEFAULT_STATES.items():
+        if key not in states.keys():
+            states[key] = G.DEFAULT_STATES[key]
     with open(os.path.join(dirname, "states.json"), "w") as states_file:
         json.dump(G.DEFAULT_STATES, states_file, indent=2)
 
@@ -191,12 +191,8 @@ def submit_manual_input():
     manual_input_num_entry.grid_forget()
     manual_input_submit.grid_forget()
 
-    manual_input_radios[0].grid_forget()
-    manual_input_radios[1].grid_forget()
-    manual_input_radios[2].grid_forget()
-    manual_input_radios[3].grid_forget()
-    manual_input_radios[4].grid_forget()
-    manual_input_radios[5].grid_forget()
+    for i in range(6):
+        manual_input_radios[i].grid_forget()
 
 def setup_rename_most_recent_chest():
     if most_recent_chest == "N/A":
