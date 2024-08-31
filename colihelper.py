@@ -2,6 +2,7 @@ import os
 import json
 import gspread
 import oauth2client.service_account
+import math
 import pyautogui
 import pygetwindow
 import keyboard
@@ -48,7 +49,9 @@ def lock_in_venue():
 
     global venue
     venue = venue_choice.get()
-    states["last_venue"] = venue
+    if states["last_venue"] != venue:
+        reset_states()
+        states["last_venue"] = venue
     venue_selector.destroy()
     venue_confirm.destroy()
 
@@ -76,19 +79,17 @@ def lock_in_venue():
 
     raw_paste_box.grid(row=1, column=0, columnspan=3, sticky="nsew")
 
-    loot_boxes["Apparel"].grid(row=2, column=0)
-    loot_boxes["Battle Stones"].grid(row=2, column=1)
-    loot_boxes["Boss Familiars"].grid(row=2, column=2)
-    loot_boxes["Genes"].grid(row=3, column=0)
-    loot_boxes["Miscellaneous"].grid(row=3, column=1)
-    loot_boxes["NonBoss Familiars"].grid(row=3, column=2)
+    for i, type in enumerate(G.LOOT_TYPES):
+        loot_boxes[type].grid(row=2+math.trunc(i/3), column=i%3)
 
-    loot_boxes["Apparel"].insert("1.0", "Apparel: 0")
-    loot_boxes["Battle Stones"].insert("1.0", "Battle Stones: 0")
-    loot_boxes["Boss Familiars"].insert("1.0", "Boss Familiars: 0")
-    loot_boxes["Genes"].insert("1.0", "Genes: 0")
-    loot_boxes["Miscellaneous"].insert("1.0", "Miscellaneous: 0")
-    loot_boxes["NonBoss Familiars"].insert("1.0", "NonBoss Familiars: 0")
+        loot_boxes[type].insert("1.0", f"{type}: {len(states[type])}")
+        if len(states[type]) == 0: continue
+        for loot in states[type]:
+            loot_boxes[type].insert("end", f"\n{loot}")
+
+    for loot in states["all_items"]:
+        most_recent_loot_entry.insert(0, f"{loot}, ")
+        raw_paste_box.insert(tkinter.END, f"[item={loot}] ")
 
     common_chest_btn.grid(row=5, column=0)
 
@@ -100,6 +101,8 @@ def lock_in_venue():
 
     total_battles_label.grid(row=10, column=0)
 
+    reset_states_btn.grid(row=10, column=1)
+
     currency_btn.grid(row=10, column=2)
 
     minor_hp_btn.grid(row=11, column=0)
@@ -109,13 +112,14 @@ def lock_in_venue():
     rename_recent_chest_btn.grid(row=12, column=0, columnspan=3)
 
 def close_action():
-    with open("states.json", "w") as json_file:
-        json.dump(states, json_file, indent=4)
-
     if has_uploaded is not None and not has_uploaded:
         if messagebox.askokcancel("Exit", "Confirm exit? You have not yet uploaded data to the sheet."):
+            with open("states.json", "w") as json_file:
+                json.dump(states, json_file, indent=4)
             gui.destroy()
     else:
+        with open("states.json", "w") as json_file:
+            json.dump(states, json_file, indent=4)
         gui.destroy()
 
 def send_to_sheet():
@@ -145,6 +149,15 @@ def send_to_sheet():
 
     global has_uploaded
     has_uploaded = True
+
+    reset_states()
+
+def reset_states():
+    global states
+    G.DEFAULT_STATES["last_venue"] = states["last_venue"]
+    states = G.DEFAULT_STATES
+    with open(os.path.join(dirname, "states.json"), "w") as states_file:
+        json.dump(states, states_file, indent=2)
 
 def setup_manual_input():
     manual_input_name_label.grid(row=6, column=0)
@@ -230,6 +243,7 @@ def fight_on():
         return
 
     increment_widget_value(total_battles_label)
+    states["battles"] += 1
 
     loot_image = ImageGrab.grab(bbox=G.LOOT_ITEM_BOUNDS)
     loot_image.save(os.path.join(dirname, "recent_loot.png"))
@@ -317,6 +331,9 @@ def add_loot(name, type):
         global most_recent_chest
         most_recent_chest = name
         rename_recent_chest_btn.config(text=f"Rename last chest")
+    else:
+        states["all_items"].append(name)
+        states[type].append(name)
 
     global has_uploaded
     if has_uploaded is None:
@@ -399,7 +416,9 @@ manual_input_radios = (
     tkinter.Radiobutton(gui, text="NonBoss Familiars", variable=input_var, value="NonBoss Familiars")
 )
 
-total_battles_label = tkinter.Label(gui, text="Battles: 0")
+total_battles_label = tkinter.Label(gui, text=f"Battles: {states["battles"]}")
+
+reset_states_btn = tkinter.Button(gui, text="Reset states", command=reset_states)
 
 currency_btn = tkinter.Button(gui, text="Fest Currency: 0", command=lambda: increment_widget_value(currency_btn))
 

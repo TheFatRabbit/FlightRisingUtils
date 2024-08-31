@@ -48,8 +48,25 @@ KEYBINDS = {
 }
 
 DEFAULT_STATES = {
-    "last_venue": "Training Fields"
+    "last_venue": "Training Fields",
+    "battles": 0,
+    "all_items": [],
+    "Apparel": [],
+    "Battle Stones": [],
+    "Boss Familiars": [],
+    "Genes": [],
+    "Miscellaneous": [],
+    "NonBoss Familiars": []
 }
+
+LOOT_TYPES = [
+    "Apparel",
+    "Battle Stones",
+    "Boss Familiars",
+    "Genes",
+    "Miscellaneous",
+    "NonBoss Familiars"
+]
 
 VENUE_NAMES = (
     "Training Fields",
