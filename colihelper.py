@@ -330,6 +330,8 @@ def add_loot(name, type):
     else:
         states["all_items"].append(name)
         states[type].append(name)
+        with open(os.path.join(dirname, "states.json"), "w") as states_file:
+            json.dump(states, states_file, indent=2)
 
     global has_uploaded
     if has_uploaded is None:
