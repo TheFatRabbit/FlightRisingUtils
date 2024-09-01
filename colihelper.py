@@ -235,7 +235,9 @@ def fight_on():
     if pygetwindow.getActiveWindow().title != "Flight Rising — Mozilla Firefox":
         return
 
-    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.97):
+    try:
+        pyautogui.locateOnScreen(os.path.join(dirname, "images", "loot.png"), region=G.LOOT_TITLE_BOUNDS, confidence=0.97)
+    except pyautogui.ImageNotFoundException:
         return
 
     increment_widget_value(total_battles_label)
@@ -366,7 +368,9 @@ def save_captcha():
     if pygetwindow.getActiveWindow().title != "Flight Rising — Mozilla Firefox":
         return
     
-    if not pyautogui.locateOnScreen(os.path.join(dirname, "images", "camping.png"), region=G.CAMPING_TITLE_BOUNDS, confidence=0.97):
+    try:
+        pyautogui.locateOnScreen(os.path.join(dirname, "images", "camping.png"), region=G.CAMPING_TITLE_BOUNDS, confidence=0.97)
+    except pyautogui.ImageNotFoundException:
         return
     
     captcha_image = ImageGrab.grab(bbox=G.CAPTCHA_BOUNDS)
