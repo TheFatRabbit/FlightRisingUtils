@@ -142,10 +142,12 @@ def send_to_sheet():
 
     data_sheet.update_cells(range_to_edit, value_input_option="USER_ENTERED")
 
+    reset_states()
+
+    to_sheet_button.config(text="Successfully sent data")
+
     global has_uploaded
     has_uploaded = True
-
-    reset_states()
 
 def reset_states():
     global states
