@@ -123,14 +123,9 @@ def close_action():
         gui.destroy()
 
 def send_to_sheet():
-    loot = {
-        "Apparel": loot_boxes["Apparel"].get("2.0", "end").replace("\n", ", "),
-        "Battle Stones": loot_boxes["Battle Stones"].get("2.0", "end").replace("\n", ", "),
-        "Boss Familiars": loot_boxes["Boss Familiars"].get("2.0", "end").replace("\n", ", "),
-        "Genes": loot_boxes["Genes"].get("2.0", "end").replace("\n", ", "),
-        "Miscellaneous": loot_boxes["Miscellaneous"].get("2.0", "end").replace("\n", ", "),
-        "NonBoss Familiars": loot_boxes["NonBoss Familiars"].get("2.0", "end").replace("\n", ", ")
-    }
+    loot = {}
+    for type in G.LOOT_TYPES:
+        loot[type] = loot_boxes[type].get("2.0", "end").replace("\n", ", ")
 
     active_row = int(stats_sheet.acell("D6").value)+2
     range_to_edit = data_sheet.range(active_row, 1, active_row, 9)
@@ -166,12 +161,8 @@ def setup_manual_input():
     manual_input_num_entry.grid(row=7, column=1)
     manual_input_submit.grid(row=6, column=2, rowspan=2)
 
-    manual_input_radios[0].grid(row=8, column=0)
-    manual_input_radios[1].grid(row=8, column=1)
-    manual_input_radios[2].grid(row=8, column=2)
-    manual_input_radios[3].grid(row=9, column=0)
-    manual_input_radios[4].grid(row=9, column=1)
-    manual_input_radios[5].grid(row=9, column=2)
+    for i in range(len(manual_input_radios)):
+        manual_input_radios[i].grid(row=8+math.trunc(i/3), column=i%3)
 
 def submit_manual_input():
     if manual_input_num_entry.get() not in ("1", "2", "3", "4"):
@@ -265,7 +256,7 @@ def search_loot(loot_image):
             if ".ini" in image_filename:
                 continue
             try:
-                location = pyautogui.locate(os.path.join(dirname, "images", venue, folder_path, image_filename), loot_image, confidence=0.922)
+                pyautogui.locate(os.path.join(dirname, "images", venue, folder_path, image_filename), loot_image, confidence=0.922)
             except pyautogui.ImageNotFoundException:
                 pass
             else:
@@ -275,7 +266,7 @@ def search_loot(loot_image):
             if ".ini" in image_filename:
                 continue
             try:
-                location = pyautogui.locate(os.path.join(dirname, "images", "Universal", folder_path, image_filename), loot_image, confidence=0.922)
+                pyautogui.locate(os.path.join(dirname, "images", "Universal", folder_path, image_filename), loot_image, confidence=0.922)
             except pyautogui.ImageNotFoundException:
                 pass
             else:
@@ -387,14 +378,9 @@ bold_font.configure(weight="bold", size=11)
 most_recent_loot_entry = tkinter.Entry(gui, font=bold_font)
 raw_paste_box = tkinter.Entry(gui)
 
-loot_boxes = {
-    "Apparel": tkinter.Text(gui, width=22, height=11),
-    "Battle Stones": tkinter.Text(gui, width=22, height=11),
-    "Boss Familiars": tkinter.Text(gui, width=22, height=11),
-    "Genes": tkinter.Text(gui, width=22, height=11),
-    "Miscellaneous": tkinter.Text(gui, width=22, height=11),
-    "NonBoss Familiars": tkinter.Text(gui, width=22, height=11)
-}
+loot_boxes = {}
+for type in G.LOOT_TYPES:
+    loot_boxes[type] = tkinter.Text(gui, width=22, height=11)
 
 common_chest_btn = tkinter.Button(gui, text="Common chests: 0", command=lambda: increment_widget_value(common_chest_btn))
 
@@ -409,14 +395,10 @@ manual_input_num_entry.insert(0, "1")
 manual_input_submit = tkinter.Button(gui, text="Submit", command=submit_manual_input)
 input_var = StringVar()
 input_var.set("Apparel")
-manual_input_radios = (
-    tkinter.Radiobutton(gui, text="Apparel", variable=input_var, value="Apparel"),
-    tkinter.Radiobutton(gui, text="Battle Stones", variable=input_var, value="Battle Stones"),
-    tkinter.Radiobutton(gui, text="Boss Familiars", variable=input_var, value="Boss Familiars"),
-    tkinter.Radiobutton(gui, text="Genes", variable=input_var, value="Genes"),
-    tkinter.Radiobutton(gui, text="Miscellaneous", variable=input_var, value="Miscellaneous"),
-    tkinter.Radiobutton(gui, text="NonBoss Familiars", variable=input_var, value="NonBoss Familiars")
-)
+
+manual_input_radios = []
+for type in G.LOOT_TYPES:
+    manual_input_radios.append(tkinter.Radiobutton(gui, text=type, variable=input_var, value=type))
 
 total_battles_label = tkinter.Label(gui, text=f"Battles: {states["battles"]}")
 
