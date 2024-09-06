@@ -1,5 +1,6 @@
 __pycache__/
 captchas/
+saved_images/
 states.json
 recent_coli_screen.png
 recent_loot.png

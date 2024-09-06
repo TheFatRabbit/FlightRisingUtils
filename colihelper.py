@@ -328,6 +328,11 @@ def add_loot(name, type):
         with open(os.path.join(dirname, "states.json"), "w") as states_file:
             json.dump(states, states_file, indent=2)
 
+    if not os.path.isdir(os.path.join(dirname, "saved_images")):
+        os.makedirs(os.path.join(dirname, "saved_images"))
+    if G.RARE_ITEM_REGEX.match(name):
+        ImageTk.getimage(recent_loot_label.image).save(os.path.join(dirname, "saved_images", f"loot{len(os.listdir(os.path.join(dirname, "saved_images")))}.png"))
+
     global has_uploaded
     if has_uploaded is None:
         has_uploaded = False

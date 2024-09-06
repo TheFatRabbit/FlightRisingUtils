@@ -1,3 +1,5 @@
+import re
+
 FONT = "Helvetica 10"
 
 LOOT_TITLE_BOUNDS = (1257, 465, 1374, 522)
@@ -67,6 +69,18 @@ LOOT_TYPES = (
     "Miscellaneous",
     "NonBoss Familiars"
 )
+
+RARE_ITEM_REGEX = re.compile("|".join((
+    "Unhatched .+ Egg",
+    "Scene: .+",
+    "Vista: .+",
+    "Skin: .+",
+    "Accent: .+",
+    ".+ Crate",
+    ".+ Runestone",
+    ".+ Chest$",
+    "Eliminate",
+)))
 
 VENUE_NAMES = (
     "Training Fields",
