@@ -367,6 +367,8 @@ def save_captcha():
         return
     
     captcha_image = ImageGrab.grab(bbox=G.CAPTCHA_BOUNDS)
+    if not os.path.isdir(os.path.join(dirname, "captchas")):
+        os.makedirs(os.path.join(dirname, "captchas"))
     captcha_image.save(os.path.join(dirname, "captchas", f"captcha{len(os.listdir(os.path.join(dirname, 'captchas')))}.png"))
 
 venue_choice = StringVar()
