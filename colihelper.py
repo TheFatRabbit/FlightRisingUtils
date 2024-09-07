@@ -8,7 +8,7 @@ import pygetwindow
 import keyboard
 import tkinter
 from tkinter import font, messagebox, StringVar
-from PIL import ImageGrab, ImageTk
+from PIL import Image, ImageGrab, ImageTk
 from datetime import datetime
 import globals as G
 
@@ -42,7 +42,7 @@ gui.attributes("-topmost", True)
 gui.option_add("*font", G.FONT)
 
 has_uploaded = None
-num_loot = 0
+loot_last_battle = 0
 
 venue = ""
 def lock_in_venue():
@@ -275,8 +275,8 @@ def search_loot(loot_image):
             else:
                 match_list.append((image_filename.replace(".png", "").replace("~~", ":"), folder_path))
     
-    global num_loot
-    num_loot = 0
+    global loot_last_battle
+    loot_last_battle = 0
 
     if len(match_list) == 1:
         add_loot(match_list[0][0], match_list[0][1])
@@ -336,9 +336,10 @@ def add_loot(name, type):
     if not os.path.isdir(os.path.join(dirname, "saved_images")):
         os.makedirs(os.path.join(dirname, "saved_images"))
     
-    num_loot += 1
-    if num_loot > 1 or G.RARE_ITEM_REGEX.match(name):
-        ImageTk.getimage(recent_loot_label.image).save(os.path.join(dirname, "saved_images", f"loot{len(os.listdir(os.path.join(dirname, "saved_images")))}.png"))
+    global loot_last_battle
+    loot_last_battle += 1
+    if loot_last_battle > 1 or G.RARE_ITEM_REGEX.match(name):
+        Image.open(os.path.join(dirname, "recent_loot.png")).save(os.path.join(dirname, "saved_images", f"loot {datetime.now().strftime("%m-%d-%y %H.%M.%S")}.png"))
 
     global has_uploaded
     if has_uploaded is None:
