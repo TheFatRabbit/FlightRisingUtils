@@ -338,7 +338,7 @@ def add_loot(name, type):
     
     global loot_last_battle
     loot_last_battle += 1
-    if loot_last_battle > 1 or G.RARE_ITEM_REGEX.match(name):
+    if type == "Boss Familiars" or type == "Genes" or loot_last_battle > 1 or G.RARE_ITEM_REGEX.match(name):
         Image.open(os.path.join(dirname, "recent_loot.png")).save(os.path.join(dirname, "saved_images", f"loot {datetime.now().strftime("%m-%d-%y %H.%M.%S")}.png"))
 
     global has_uploaded
