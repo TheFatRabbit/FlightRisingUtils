@@ -116,11 +116,11 @@ def close_action():
     if has_uploaded is not None and not has_uploaded:
         if messagebox.askokcancel("Exit", "Confirm exit? You have not yet uploaded data to the sheet."):
             with open("states.json", "w") as json_file:
-                json.dump(states, json_file, indent=4)
+                json.dump(states, json_file, indent=2)
             gui.destroy()
     else:
         with open("states.json", "w") as json_file:
-            json.dump(states, json_file, indent=4)
+            json.dump(states, json_file, indent=2)
         gui.destroy()
 
 def send_to_sheet():
