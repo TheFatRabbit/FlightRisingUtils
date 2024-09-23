@@ -80,6 +80,7 @@ RARE_ITEM_REGEX = re.compile("|".join((
     ".+ Runestone",
     ".+ Chest$",
     "Eliminate",
+    "Otherworldly Flora"
 )))
 
 VENUE_NAMES = (
