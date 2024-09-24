@@ -3,6 +3,7 @@ import json
 import gspread
 import oauth2client.service_account
 import math
+import re
 import pyautogui
 import pygetwindow
 import keyboard
@@ -29,8 +30,11 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 credentials = oauth2client.service_account.ServiceAccountCredentials.from_json_keyfile_name("tracker_sheet_key.json", scope)
 connection = gspread.authorize(credentials)
 spreadsheet = connection.open("Flight Rising Utilities")
-data_sheet = spreadsheet.worksheet(G.DATA_SHEET_NAME)
-stats_sheet = spreadsheet.worksheet(G.STATS_SHEET_NAME)
+data_sheet = spreadsheet.worksheet("Session Data")
+stats_sheet = spreadsheet.worksheet("Stats and Pics")
+references_sheet = spreadsheet.worksheet("References")
+
+RARE_ITEM_REGEX = re.compile("|".join(val[0] for val in references_sheet.get_values("F2:F")))
 
 pyautogui.FAILSAFE = False
 
@@ -338,7 +342,7 @@ def add_loot(name, type):
     
     global loot_last_battle
     loot_last_battle += 1
-    if type == "Boss Familiars" or type == "Genes" or loot_last_battle > 1 or G.RARE_ITEM_REGEX.match(name):
+    if type == "Boss Familiars" or type == "Genes" or loot_last_battle > 1 or RARE_ITEM_REGEX.match(name):
         Image.open(os.path.join(dirname, "recent_loot.png")).save(os.path.join(dirname, "saved_images", f"loot {datetime.now().strftime("%m-%d-%y %H.%M.%S")}.png"))
 
     global has_uploaded

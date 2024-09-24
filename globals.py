@@ -1,5 +1,3 @@
-import re
-
 FONT = "Helvetica 10"
 
 LOOT_TITLE_BOUNDS = (1257, 465, 1374, 522)
@@ -13,10 +11,6 @@ GUI_BOUNDS = (0, 115, 466, 1079)
 CAMPING_TITLE_BOUNDS = (947, 325, 1142, 380)
 
 CAPTCHA_BOUNDS = (803, 441, 1288, 731)
-
-DATA_SHEET_NAME = "Session Data"
-
-STATS_SHEET_NAME = "Stats and Pics"
 
 KEYBINDS = {
     "Default": {
@@ -69,19 +63,6 @@ LOOT_TYPES = (
     "Miscellaneous",
     "NonBoss Familiars"
 )
-
-RARE_ITEM_REGEX = re.compile("|".join((
-    "Unhatched .+ Egg",
-    "Scene: .+",
-    "Vista: .+",
-    "Skin: .+",
-    "Accent: .+",
-    ".+ Crate",
-    ".+ Runestone",
-    ".+ Chest$",
-    "Eliminate",
-    "Otherworldly Flora"
-)))
 
 VENUE_NAMES = (
     "Training Fields",
