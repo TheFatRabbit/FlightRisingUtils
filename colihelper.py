@@ -59,6 +59,8 @@ def lock_in_venue():
         states["last_venue"] = venue
     venue_selector.destroy()
     venue_confirm.destroy()
+    
+    gui.title(f"{gui.title()} - {venue}")
 
     found_venue = False
     for keybind_venue, keybinds in G.KEYBINDS.items():
