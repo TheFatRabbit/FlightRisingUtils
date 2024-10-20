@@ -62,6 +62,8 @@ def lock_in_venue():
     
     gui.title(f"{gui.title()} - {venue}")
 
+    total_battles_label.config(text=f"Battles: {states["battles"]}")
+
     found_venue = False
     for keybind_venue, keybinds in G.KEYBINDS.items():
         if keybind_venue == venue:
@@ -159,7 +161,7 @@ def send_to_sheet():
 def reset_states():
     global states
     G.DEFAULT_STATES["last_venue"] = states["last_venue"]
-    states = G.DEFAULT_STATES
+    states = G.DEFAULT_STATES.copy()
     with open(os.path.join(dirname, "states.json"), "w") as states_file:
         json.dump(states, states_file, indent=2)
 
@@ -423,7 +425,7 @@ manual_input_radios = []
 for type in G.LOOT_TYPES:
     manual_input_radios.append(tkinter.Radiobutton(gui, text=type, variable=input_var, value=type))
 
-total_battles_label = tkinter.Label(gui, text=f"Battles: {states["battles"]}")
+total_battles_label = tkinter.Label(gui, text="Battles: 0")
 
 reset_states_btn = tkinter.Button(gui, text="Reset states", command=reset_states)
 
