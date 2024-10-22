@@ -22,7 +22,7 @@ states = json.load(open("states.json"))
 if len(states) != len(G.DEFAULT_STATES):
     for key, value in G.DEFAULT_STATES.items():
         if key not in states.keys():
-            states[key] = G.DEFAULT_STATES[key]
+            states[key] = G.DEFAULT_STATES[key].copy()
     with open(os.path.join(dirname, "states.json"), "w") as states_file:
         json.dump(G.DEFAULT_STATES, states_file, indent=2)
 
